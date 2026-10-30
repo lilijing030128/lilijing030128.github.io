@@ -719,9 +719,14 @@
     <script>
         // ================= 1. 简历下载与联系我逻辑 =================
         function downloadResume() {
-            alert("提示：由于当前处于预览环境，将为您打开打印窗口。您可以选择“另存为 PDF”保存简历。在实际网站中，此按钮将直接下载 resume.pdf 文件。");
+            // 创建一个隐藏的 a 标签触发强制下载
+            const link = document.createElement('a');
+            link.href = 'resume.pdf'; // 这里指向你上传的 PDF 文件
+            link.download = '栗丽婧_简历.pdf'; // 别人下载后显示的文件名
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
-
         function openContactModal() {
             document.getElementById('contactModal').classList.add('active');
             document.body.style.overflow = 'hidden';
