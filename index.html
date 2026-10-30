@@ -903,7 +903,13 @@
 
         // ================= 5. 通用关闭弹窗 =================
         function closeModal(event) {
-            if(event.target.classList.contains('modal-overlay') || event.target.className === 'close-btn' || event.target.innerText === '×'){
+            // 如果点击的是遮罩层、右上角的X、或者底部的关闭按钮
+            if(event.target.classList.contains('modal-overlay') || 
+               event.target.classList.contains('close-btn') || 
+               event.target.innerText === '关闭' || 
+               event.target.innerText === '×'){
+                
+                // 关闭所有弹窗
                 document.querySelectorAll('.modal-overlay').forEach(modal => {
                     modal.classList.remove('active');
                 });
