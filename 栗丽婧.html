@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>栗丽婧 | 数据探索者 & 商业分析</title>
+    <style>
+        /* ================= 全局变量与重置 ================= */
+        :root {
+            --bg-color: #fcfcfc;
+            --text-main: #1f2937;
+            --text-sub: #6b7280;
+            --accent-color: #8b5cf6;
+            --accent-light: #f3e8ff;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+            --radius: 24px;
+            --glow: 0 0 20px rgba(139, 92, 246, 0.4), 0 0 40px rgba(244, 114, 182, 0.2);
+            --ai-gradient: linear-gradient(135deg, #8b5cf6, #3b82f6, #10b981);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+        body { 
+            background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(253, 226, 228, 0.6) 0%, transparent 40%),
+                radial-gradient(circle at 90% 30%, rgba(219, 234, 254, 0.6) 0%, transparent 40%),
+                radial-gradient(circle at 50% 80%, rgba(209, 250, 229, 0.6) 0%, transparent 40%),
+                radial-gradient(circle at 80% 90%, rgba(254, 243, 199, 0.6) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+        a { text-decoration: none; color: inherit; }
+
+        /* ================= 动态漂浮文字 ================= */
+        .floating-text { position: fixed; font-weight: 900; color: rgba(0,0,0,0.02); z-index: -1; pointer-events: none; font-size: 6rem; animation: floatText 20s infinite linear; }
+        @keyframes floatText { 0% { transform: translateY(0) translateX(0); } 50% { transform: translateY(-40px) translateX(20px); } 100% { transform: translateY(0) translateX(0); } }
+
+        /* ================= 毛玻璃导航栏 ================= */
+        .navbar {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 1100px; height: 64px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 20px; z-index: 1000;
+            background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(16px);
+            border-radius: 32px; box-shadow: var(--shadow); border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .navbar .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.1rem; color: #111827;}
+        .navbar .logo img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+        .nav-links { display: flex; gap: 20px; list-style: none; font-size: 0.9rem; font-weight: 600; color: #374151;}
+        .nav-links li a { transition: all 0.3s; padding: 8px 12px; border-radius: 20px;}
+        .nav-links li a:hover { color: var(--accent-color); background: var(--accent-light); }
+        .nav-btn { background: #111827; color: #fff; border: none; padding: 10px 20px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .nav-btn:hover { background: var(--accent-color); transform: translateY(-2px); box-shadow: var(--glow); }
+
+        /* ================= 首屏 Hero ================= */
+        .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 120px 5% 0; max-width: 1200px; margin: 0 auto; gap: 40px; }
+        .hero-text { flex: 1; }
+        .tag-hello { display: inline-block; background: #fff; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; color: #059669; border: 1px solid #d1fae5; margin-bottom: 20px; font-weight: bold;}
+        .hero-text h1 { font-size: 4.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 15px; color: #111827; }
+        .hero-text h1 span { color: #111827; }
+        .hero-text h2 { font-size: 1.8rem; color: var(--accent-color); margin-bottom: 30px; font-weight: 600;}
+        .hero-actions { display: flex; gap: 15px; margin-bottom: 30px; }
+        .btn-primary { background: #111827; color: white; padding: 12px 28px; border-radius: 24px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: transform 0.3s; cursor: pointer; border: none;}
+        .btn-secondary { background: white; color: #111827; padding: 12px 28px; border-radius: 24px; font-weight: 600; border: 1px solid #e5e7eb; transition: transform 0.3s; cursor: pointer;}
+        .btn-primary:hover, .btn-secondary:hover { transform: translateY(-3px); box-shadow: var(--glow); }
+        .skills-preview { display: flex; gap: 10px; flex-wrap: wrap; }
+        .skill-pill { background: rgba(255,255,255,0.6); border: 1px solid #e5e7eb; padding: 6px 14px; border-radius: 16px; font-size: 0.85rem; color: var(--text-sub); }
+
+        .hero-image { flex: 0 0 400px; position: relative; display: flex; justify-content: center;}
+        .hero-image img { width: 100%; max-width: 380px; border-radius: 40px; object-fit: cover; z-index: 2; box-shadow: var(--shadow);}
+        .hero-blob { position: absolute; width: 350px; height: 350px; background: var(--accent-light); border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); filter: blur(40px); z-index: 1; }
+
+        /* ================= 通用区块 ================= */
+        .section-container { max-width: 1100px; margin: 0 auto; padding: 100px 5%; }
+        .section-header { text-align: center; margin-bottom: 60px; }
+        .section-subtitle { font-size: 0.9rem; color: var(--text-sub); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; font-weight: bold;}
+        .section-title { font-size: 2.5rem; font-weight: 800; color: #111827; }
+
+        /* ================= AI 岗位匹配区 ================= */
+        .ai-matcher-section { background: #111827; border-radius: 32px; padding: 50px; color: white; box-shadow: 0 20px 40px rgba(0,0,0,0.2); position: relative; overflow: hidden;}
+        .ai-matcher-section::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 60%); z-index: 0; pointer-events: none;}
+        .ai-header { position: relative; z-index: 1; text-align: center; margin-bottom: 30px;}
+        .ai-header h2 { font-size: 2rem; font-weight: 800; margin-bottom: 10px; background: var(--ai-gradient); -webkit-background-clip: text; color: transparent;}
+        .ai-header p { color: #9ca3af; font-size: 0.95rem;}
+        
+        .ai-input-group { display: flex; gap: 15px; max-width: 700px; margin: 0 auto 30px; position: relative; z-index: 1;}
+        .ai-input-group input { flex: 1; padding: 16px 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: white; font-size: 1rem; outline: none; transition: all 0.3s;}
+        .ai-input-group input:focus { border-color: var(--accent-color); background: rgba(255,255,255,0.1); box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);}
+        .ai-input-group button { background: var(--ai-gradient); color: white; border: none; padding: 0 32px; border-radius: 16px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s;}
+        .ai-input-group button:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(139, 92, 246, 0.4);}
+        
+        .ai-tags { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; position: relative; z-index: 1;}
+        .ai-tag { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); padding: 6px 14px; border-radius: 16px; font-size: 0.85rem; color: #d1d5db; cursor: pointer; transition: all 0.2s;}
+        .ai-tag:hover { background: rgba(139, 92, 246, 0.2); color: white; border-color: rgba(139, 92, 246, 0.5);}
+
+        .ai-result-container { max-width: 700px; margin: 0 auto; background: rgba(0,0,0,0.3); border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); padding: 30px; position: relative; z-index: 1; display: none;}
+        .ai-result-container.active { display: block; animation: fadeIn 0.5s ease;}
+        
+        .ai-loading { text-align: center; color: #9ca3af; display: none;}
+        .ai-loading.active { display: block;}
+        .spinner { width: 30px; height: 30px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 15px;}
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .match-score { font-size: 3rem; font-weight: 800; color: #10b981; margin-bottom: 10px; line-height: 1;}
+        .match-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 20px;}
+        .match-details { margin-bottom: 20px;}
+        .match-details h4 { font-size: 0.9rem; color: #9ca3af; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;}
+        .match-skills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px;}
+        .match-skill-badge { background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 4px 12px; border-radius: 12px; font-size: 0.85rem; border: 1px solid rgba(16,185,129,0.3);}
+        .match-experience { font-size: 0.95rem; color: #d1d5db; line-height: 1.6;}
+        
+        .ai-tech-credit { text-align: center; margin-top: 30px; font-size: 0.8rem; color: #6b7280; position: relative; z-index: 1;}
+        .ai-tech-credit span { color: var(--accent-color); font-weight: bold;}
+
+        /* ================= 教育背景 ================= */
+        .edu-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
+        .edu-card { 
+            display: flex; background: var(--card-bg); border-radius: var(--radius); overflow: hidden; 
+            box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,0.8); backdrop-filter: blur(10px); 
+            transition: all 0.3s; min-height: 320px;
+        }
+        .edu-card:hover { transform: translateY(-5px); box-shadow: var(--glow); }
+        .edu-img { width: 35%; position: relative; flex-shrink: 0; }
+        .edu-img img { width: 100%; height: 100%; object-fit: cover; }
+        .edu-info { padding: 40px; display: flex; flex-direction: column; justify-content: center; flex: 1;}
+        .edu-date { font-size: 0.95rem; color: #d97706; font-weight: 600; margin-bottom: 8px; }
+        .edu-school { font-size: 1.8rem; font-weight: 800; margin-bottom: 5px; color: #111827;}
+        .edu-major { font-size: 1.1rem; color: var(--accent-color); margin-bottom: 20px; font-weight: 600; }
+        .edu-desc { font-size: 0.95rem; color: var(--text-sub); line-height: 1.8;}
+
+        /* ================= 技能展示区 ================= */
+        .skills-wrapper { display: flex; flex-direction: column; gap: 30px; background: rgba(255,255,255,0.5); border-radius: 32px; padding: 50px; box-shadow: var(--shadow);}
+        .skill-display-main { background: white; border-radius: 24px; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); min-height: 300px; transition: all 0.3s ease;}
+        .skill-display-main .file-tag { font-size: 0.8rem; color: #059669; font-weight: bold; letter-spacing: 1px; margin-bottom: 10px; display: block;}
+        .skill-display-main h3 { font-size: 2rem; margin-bottom: 20px; color: #111827;}
+        .skill-display-main ul { list-style: none; padding-left: 0; margin-top: 20px;}
+        .skill-display-main ul li { margin-bottom: 15px; padding-left: 24px; position: relative; font-size: 1.05rem; color: #374151; line-height: 1.6;}
+        .skill-display-main ul li::before { content: '✦'; position: absolute; left: 0; color: var(--accent-color); font-size: 1.1rem;}
+
+        .skill-tags-container { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;}
+        .skill-nav-btn { background: #fff; border: 1px solid #e5e7eb; padding: 12px 24px; border-radius: 20px; font-size: 1rem; font-weight: 600; color: #6b7280; cursor: pointer; transition: all 0.3s; }
+        .skill-nav-btn:hover { box-shadow: var(--glow); transform: translateY(-2px); color: var(--accent-color);}
+        .skill-nav-btn.active { background: var(--accent-color); color: white; border-color: var(--accent-color); box-shadow: var(--glow);}
+
+        /* ================= 工作经历 (评论区式折叠) ================= */
+        .timeline-group { margin-bottom: 80px; }
+        .group-title { font-size: 1.6rem; font-weight: 800; color: #111827; margin-bottom: 30px; display: flex; align-items: center; gap: 10px;}
+        .group-title::before { content: ''; display: block; width: 6px; height: 24px; background: var(--accent-color); border-radius: 4px;}
+
+        .comment-list { display: flex; flex-direction: column; gap: 16px; }
+        .comment-item {
+            background: var(--card-bg); border-radius: 16px; border: 1px solid rgba(0,0,0,0.04);
+            overflow: hidden; transition: box-shadow 0.3s;
+        }
+        .comment-item:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
+        
+        .comment-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 24px; cursor: pointer; user-select: none;
+            transition: background 0.2s;
+        }
+        .comment-header:hover { background: rgba(0,0,0,0.01); }
+        .comment-info { display: flex; align-items: center; gap: 16px; }
+        .comment-avatar { width: 48px; height: 48px; background: var(--accent-light); border-radius: 12px; display: flex; justify-content: center; align-items: center; font-weight: 800; color: var(--accent-color); font-size: 1.2rem;}
+        .comment-meta h4 { font-size: 1.1rem; color: #111827; margin-bottom: 4px;}
+        .comment-meta p { font-size: 0.85rem; color: var(--text-sub);}
+        .comment-toggle { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: var(--accent-color); font-weight: 600;}
+        .comment-toggle svg { transition: transform 0.3s ease; }
+        .comment-item.active .comment-toggle svg { transform: rotate(180deg); }
+
+        .comment-body {
+            max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out;
+            background: white; border-top: 1px solid transparent;
+        }
+        .comment-item.active .comment-body { border-top-color: rgba(0,0,0,0.04); }
+        .comment-content-inner { padding: 24px; }
+        .comment-content-inner h4 { margin: 20px 0 10px; color: #111827; font-size: 1.05rem;}
+        .comment-content-inner h4:first-child { margin-top: 0; }
+        .comment-content-inner ul { list-style: none; padding-left: 0;}
+        .comment-content-inner ul li { margin-bottom: 10px; color: var(--text-sub); padding-left: 20px; position: relative; line-height: 1.6; font-size: 0.95rem;}
+        .comment-content-inner ul li::before { content: '•'; position: absolute; left: 0; color: var(--accent-color); font-size: 1.3rem; line-height: 1; top: -1px;}
+        .cert-img { display: block; max-width: 100%; max-height: 350px; object-fit: contain; margin: 15px auto 0; border-radius: 10px; border: 1px solid #eee; background: #fff; padding: 8px;}
+
+        /* ================= 竞赛与创业 (卡片网格) ================= */
+        .comp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .comp-card {
+            background: white; border-radius: 20px; padding: 28px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.02);
+            transition: all 0.3s ease; cursor: pointer; display: flex; flex-direction: column;
+        }
+        .comp-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.06); border-color: rgba(139, 92, 246, 0.2);}
+        .comp-tag { display: inline-block; padding: 4px 10px; background: #f3f4f6; border-radius: 8px; font-size: 0.75rem; font-weight: 600; color: #6b7280; margin-bottom: 16px; align-self: flex-start;}
+        .comp-tag.award { background: var(--accent-light); color: var(--accent-color);}
+        .comp-card h3 { font-size: 1.25rem; color: #111827; margin-bottom: 8px; font-weight: 700; line-height: 1.4;}
+        .comp-card p { font-size: 0.9rem; color: var(--text-sub); margin-bottom: 20px; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;}
+        .comp-footer { margin-top: auto; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f3f4f6; padding-top: 16px;}
+        .comp-date { font-size: 0.85rem; color: #9ca3af; font-weight: 500;}
+        .comp-link { font-size: 0.85rem; color: var(--accent-color); font-weight: 600; display: flex; align-items: center; gap: 4px;}
+
+        /* ================= 弹窗通用样式 ================= */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: all 0.3s; z-index: 2000; padding: 20px;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content {
+            background: white; width: 100%; max-width: 750px; max-height: 85vh; overflow-y: auto;
+            border-radius: 24px; padding: 40px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            transform: translateY(20px); transition: all 0.3s;
+        }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+        .close-btn { position: absolute; top: 20px; right: 24px; font-size: 2rem; color: #9ca3af; cursor: pointer; transition: 0.2s; line-height:1;}
+        .close-btn:hover { color: #111827; }
+        .modal-title { font-size: 1.8rem; color: #111827; margin-bottom: 8px; }
+        .modal-subtitle { font-size: 1rem; color: var(--accent-color); margin-bottom: 24px; font-weight: 600;}
+        .modal-body h4 { font-size: 1.1rem; color: #111827; margin: 20px 0 10px;}
+        .modal-body p { font-size: 0.95rem; color: #4b5563; margin-bottom: 10px; line-height: 1.7;}
+        .modal-body ul { list-style: none; padding-left: 0; margin-bottom: 24px;}
+        .modal-body ul li { margin-bottom: 10px; color: #4b5563; padding-left: 20px; position: relative; line-height: 1.6; font-size: 0.95rem;}
+        .modal-body ul li::before { content: '•'; position: absolute; left: 0; color: var(--accent-color); font-size: 1.5rem; line-height: 1; top: -2px;}
+
+        /* 联系方式特定样式 */
+        .contact-info-list { list-style: none; padding: 0; margin: 20px 0;}
+        .contact-info-list li { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; font-size: 1.1rem; font-weight: 500; color: #111827; background: #f9fafb; padding: 15px 20px; border-radius: 12px;}
+        .contact-info-list li svg { width: 24px; height: 24px; color: var(--accent-color); }
+        
+        /* 其他获奖时间线特定样式 */
+        .other-timeline { position: relative; padding-left: 20px; margin-top: 20px;}
+        .other-timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: #e5e7eb;}
+        .other-item { position: relative; margin-bottom: 20px; padding-left: 15px;}
+        .other-item::before { content: ''; position: absolute; left: -4px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-color); }
+        .other-date { font-size: 0.85rem; font-weight: 700; color: var(--accent-color); margin-bottom: 4px;}
+        .other-title { font-size: 0.95rem; color: #374151; font-weight: 500;}
+
+        /* ================= 页脚 ================= */
+        .footer { text-align: center; padding: 60px 20px; color: var(--text-sub); border-top: 1px solid rgba(0,0,0,0.05); margin-top: 60px; background: rgba(255,255,255,0.3);}
+
+        /* ================= 响应式 ================= */
+        @media (max-width: 1024px) {
+            .comp-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 900px) {
+            .hero { flex-direction: column; text-align: center; padding-top: 100px; }
+            .hero-text h1 { font-size: 3rem; }
+            .hero-actions, .skills-preview { justify-content: center; }
+            .edu-card { flex-direction: column; }
+            .edu-img { width: 100%; height: 250px; }
+            .nav-links { display: none; }
+            .skills-wrapper { padding: 30px; }
+            .comp-grid { grid-template-columns: 1fr; }
+            .ai-input-group { flex-direction: column; }
+            .ai-input-group button { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 背景文字 -->
+    <div class="floating-text" style="top: 15%; left: 5%;">Lijing</div>
+    <div class="floating-text" style="top: 40%; right: 10%; animation-delay: -5s;">Data</div>
+    <div class="floating-text" style="top: 70%; left: 15%; animation-delay: -10s;">Analysis</div>
+
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="logo">
+            <img src="avatar.jpg" alt="Logo">
+            栗丽婧
+        </div>
+        <ul class="nav-links">
+            <li><a href="#about">关于我</a></li>
+            <li><a href="#ai-matcher">AI 匹配</a></li>
+            <li><a href="#education">教育背景</a></li>
+            <li><a href="#skills">技能档案</a></li>
+            <li><a href="#work-experience">工作经历</a></li>
+            <li><a href="#competitions">竞赛创业</a></li>
+        </ul>
+        <button class="nav-btn" onclick="downloadResume()">简历.pdf ↗</button>
+    </nav>
+
+    <!-- 首屏 Hero -->
+    <header class="hero" id="about">
+        <div class="hero-text">
+            <div class="tag-hello">● HELLO / 你好</div>
+            <h1>Hi,<br>我是<span>栗丽婧</span></h1>
+            <h2>Business Analyst / 商业分析</h2>
+            <div class="hero-actions">
+                <button class="btn-primary" onclick="downloadResume()">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    下载简历
+                </button>
+                <button class="btn-secondary" onclick="openContactModal()">联系我</button>
+            </div>
+            <div class="skills-preview">
+                <span class="skill-pill">Excel</span>
+                <span class="skill-pill">SQL</span>
+                <span class="skill-pill">Python</span>
+                <span class="skill-pill">STATA</span>
+                <span class="skill-pill">SPSS</span>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="hero-blob"></div>
+            <img src="avatar.jpg" alt="栗丽婧">
+        </div>
+    </header>
+
+    <!-- ================= AI 岗位匹配区 ================= -->
+    <div class="section-container" id="ai-matcher">
+        <div class="ai-matcher-section">
+            <div class="ai-header">
+                <h2>✨ AI 智能岗位匹配</h2>
+                <p>输入您的目标岗位，AI 将根据栗丽婧的简历进行深度适配分析。</p>
+            </div>
+            
+            <div class="ai-input-group">
+                <input type="text" id="jobInput" placeholder="例如：数据分析师、商业分析师、产品运营..." onkeypress="handleKeyPress(event)">
+                <button onclick="startAIMatching()">开始匹配</button>
+            </div>
+            
+            <div class="ai-tags">
+                <span class="ai-tag" onclick="quickMatch('数据分析师')">数据分析师</span>
+                <span class="ai-tag" onclick="quickMatch('商业分析师')">商业分析师</span>
+                <span class="ai-tag" onclick="quickMatch('产品运营')">产品运营</span>
+                <span class="ai-tag" onclick="quickMatch('金融风控')">金融风控</span>
+            </div>
+
+            <!-- 加载动画 -->
+            <div class="ai-loading" id="aiLoading">
+                <div class="spinner"></div>
+                <p>大模型正在深度解析简历数据与岗位需求...</p>
+            </div>
+
+            <!-- 匹配结果 -->
+            <div class="ai-result-container" id="aiResult">
+                <div class="match-score" id="matchScore">95%</div>
+                <div class="match-title">极高匹配度！</div>
+                
+                <div class="match-details">
+                    <h4>核心匹配技能</h4>
+                    <div class="match-skills" id="matchSkills">
+                        <!-- 动态生成 -->
+                    </div>
+                </div>
+                
+                <div class="match-details">
+                    <h4>AI 简历洞察</h4>
+                    <div class="match-experience" id="matchExp">
+                        <!-- 动态生成 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 技术说明 -->
+            <div class="ai-tech-credit">
+                底层 AI 算法驱动：<span>OpenAI GPT-4o</span> &nbsp;|&nbsp; 核心解析：大语言模型简历语义理解与岗位特征向量匹配
+            </div>
+        </div>
+    </div>
+
+    <!-- 教育背景 -->
+    <div class="section-container" id="education">
+        <div class="section-header">
+            <div class="section-subtitle">01 / EDUCATION</div>
+            <h2 class="section-title">教育背景</h2>
+        </div>
+        <div class="edu-grid">
+            <div class="edu-card">
+                <div class="edu-img"><img src="university2.jpg" alt="香港理工大学"></div>
+                <div class="edu-info">
+                    <div class="edu-date">2026.09 — 至今</div>
+                    <div class="edu-school">香港理工大学</div>
+                    <div class="edu-major">硕士 / 数字经济学 (QS 50)</div>
+                    <div class="edu-desc">开启研究生阶段学习，主修中级宏观经济、金融学、Python、AI概念及数据结构等课程。致力于将经济学理论与前沿数据科学相结合。</div>
+                </div>
+            </div>
+            <div class="edu-card">
+                <div class="edu-img"><img src="university1.jpg" alt="合肥工业大学"></div>
+                <div class="edu-info">
+                    <div class="edu-date">2020.09 — 2024.07</div>
+                    <div class="edu-school">合肥工业大学</div>
+                    <div class="edu-major">本科 / 经济学 (双一流/211)</div>
+                    <div class="edu-desc">GPA 87.65/100。系统学习经济学理论，熟练掌握SPSS、STATA等分析工具，荣获学习进步奖、三等奖学金，并在各类创新创业竞赛中屡获省级、校级殊荣。</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 技能展示区 -->
+    <div class="section-container" id="skills">
+        <div class="section-header">
+            <div class="section-subtitle">02 / SKILLS & EXPERIENCE</div>
+            <h2 class="section-title">技能与实战档案</h2>
+            <p style="color: var(--text-sub); margin-top: 10px;">点击下方标签，查看对应技能的真实应用场景。</p>
+        </div>
+        <div class="skills-wrapper">
+            <div class="skill-display-main" id="skillDisplay">
+                <span class="file-tag" id="skillTag">FILE 01 / EXCEL</span>
+                <h3 id="skillTitle">Excel 高级处理</h3>
+                <div id="skillContent">
+                    <ul>
+                        <li><b>华发集团 (2025)：</b>收集清洗 <b>15,000 份</b> 问卷数据，多表关联校验，独立搭建动态实时数据更新面板（Dashboard）。</li>
+                        <li><b>山西禾和时尚 (2025)：</b>搭建多维度业务动态看板，按区域、品牌及品类拆解销售表现，定位异常波动。</li>
+                        <li><b>中铁十五局 (2024)：</b>针对50+类建筑材料台账，利用 Excel 对采购、库存与消耗数据进行趋势分析。</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="skill-tags-container">
+                <button class="skill-nav-btn active" onclick="switchSkill('excel', this)">Excel 高级处理</button>
+                <button class="skill-nav-btn" onclick="switchSkill('sql', this)">SQL 数据提取</button>
+                <button class="skill-nav-btn" onclick="switchSkill('python', this)">Python (Pandas)</button>
+                <button class="skill-nav-btn" onclick="switchSkill('stata', this)">STATA 计量建模</button>
+                <button class="skill-nav-btn" onclick="switchSkill('spss', this)">SPSS 统计检验</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 工作经历 (评论区式手风琴) -->
+    <div class="section-container" id="work-experience">
+        <div class="section-header">
+            <div class="section-subtitle">03 / WORK EXPERIENCE</div>
+            <h2 class="section-title">工作经历</h2>
+            <p style="color: var(--text-sub); margin-top: 10px;">点击卡片展开详细信息与实习证明。</p>
+        </div>
+        <div class="comment-list">
+            <!-- 华发集团 -->
+            <div class="comment-item">
+                <div class="comment-header" onclick="toggleComment(this)">
+                    <div class="comment-info">
+                        <div class="comment-avatar">华</div>
+                        <div class="comment-meta">
+                            <h4>华发集团</h4>
+                            <p>项目运营专员 | 2025.11 - 2026.07</p>
+                        </div>
+                    </div>
+                    <div class="comment-toggle">
+                        <span>展开</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </div>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content-inner">
+                        <h4>核心职责 & 数据动作</h4>
+                        <ul>
+                            <li>统筹园区品质宣传与社区活动策划，主导业主意见征询及满意度调研的数据分析。</li>
+                            <li>收集并清洗 <b>15,000 份</b> 问卷数据，熟练运用 Excel（VLOOKUP、复杂函数公式）进行多表关联与数据校验。</li>
+                            <li>独立搭建动态实时数据更新面板（Dashboard），为园区品质提升及物业费催缴提供强有力的量化决策依据。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- 禾和时尚 -->
+            <div class="comment-item">
+                <div class="comment-header" onclick="toggleComment(this)">
+                    <div class="comment-info">
+                        <div class="comment-avatar">禾</div>
+                        <div class="comment-meta">
+                            <h4>山西禾和时尚科技有限公司</h4>
+                            <p>商业分析助理 | 2025.01 - 2025.08</p>
+                        </div>
+                    </div>
+                    <div class="comment-toggle">
+                        <span>展开</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </div>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content-inner">
+                        <h4>核心职责 & 数据动作</h4>
+                        <ul>
+                            <li>运用 SQL 从业务数据库中提取门店、品牌与销售流水记录，对近 <b>10万条</b> 交易数据进行清洗与异常值处理。</li>
+                            <li>熟练使用 Excel 搭建多维度业务动态看板，按区域、品牌及品类拆解销售表现并定位异常波动。</li>
+                            <li>收集同商圈竞品的定价与促销数据，撰写竞品分析报告，为调整货品调配与销售策略提供数据支撑。</li>
+                        </ul>
+                        <h4>实习证明</h4>
+                        <img src="InternshipCertificate1.jpg" alt="禾和时尚实习证明" class="cert-img">
+                    </div>
+                </div>
+            </div>
+            <!-- 中铁十五局 -->
+            <div class="comment-item">
+                <div class="comment-header" onclick="toggleComment(this)">
+                    <div class="comment-info">
+                        <div class="comment-avatar">铁</div>
+                        <div class="comment-meta">
+                            <h4>中铁十五局集团有限公司</h4>
+                            <p>数据实习生 | 2024.09 - 2024.12</p>
+                        </div>
+                    </div>
+                    <div class="comment-toggle">
+                        <span>展开</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </div>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content-inner">
+                        <h4>核心职责 & 数据动作</h4>
+                        <ul>
+                            <li>负责材料进出场信息的录入与逻辑校验，建立并维护覆盖 <b>50+类</b> 建筑材料的数字化台账，保障上万条底层数据的准确性。</li>
+                            <li>使用 Excel 对材料采购、库存与消耗数据进行趋势分析，排查出部分材料库存周转偏慢等异常情况。</li>
+                            <li>输出数据简报，为项目部优化后续采购计划与供应链调度提供基础数据参考。</li>
+                        </ul>
+                        <h4>实习证明</h4>
+                        <img src="InternshipCertificate2.jpg" alt="中铁实习证明" class="cert-img">
+                    </div>
+                </div>
+            </div>
+            <!-- 代县农信社 -->
+            <div class="comment-item">
+                <div class="comment-header" onclick="toggleComment(this)">
+                    <div class="comment-info">
+                        <div class="comment-avatar">信</div>
+                        <div class="comment-meta">
+                            <h4>代县农村信用合作联社</h4>
+                            <p>风险管理实习生 | 2024.01 - 2024.02</p>
+                        </div>
+                    </div>
+                    <div class="comment-toggle">
+                        <span>展开</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </div>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content-inner">
+                        <h4>核心职责 & 数据动作</h4>
+                        <ul>
+                            <li>基于不良资产台账，使用 Excel 对 <b>300+户</b> 逾期客户数据进行清洗与分类。</li>
+                            <li>提取逾期天数、欠款金额等关键风险特征，协助搭建不良资产价值评估模型。</li>
+                            <li>为部门季度风险排查与催收策略提供数据依据。</li>
+                        </ul>
+                        <h4>实习证明</h4>
+                        <img src="InternshipCertificate3.jpg" alt="代县农信社实习证明" class="cert-img">
+                    </div>
+                </div>
+            </div>
+            <!-- 锦泽工程 -->
+            <div class="comment-item">
+                <div class="comment-header" onclick="toggleComment(this)">
+                    <div class="comment-info">
+                        <div class="comment-avatar">锦</div>
+                        <div class="comment-meta">
+                            <h4>山西锦泽工程科技有限公司</h4>
+                            <p>管理顾问 | 2022.12 - 2023.01</p>
+                        </div>
+                    </div>
+                    <div class="comment-toggle">
+                        <span>展开</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </div>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content-inner">
+                        <h4>核心职责 & 动作</h4>
+                        <ul>
+                            <li>从事市场分析、产业研究、战略规划等工作。</li>
+                            <li>基于市场分析和行业研究，识别企业战略目标，参与制定组织策略与行动计划。</li>
+                            <li>通过优化企业结构和业务流程提升运营效率，协助设计并实施管理系统。</li>
+                        </ul>
+                        <h4>实习证明</h4>
+                        <img src="InternshipCertificate4.jpg" alt="锦泽实习证明" class="cert-img">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 竞赛与创业 (卡片网格) -->
+    <div class="section-container" id="competitions">
+        <div class="section-header">
+            <div class="section-subtitle">04 / COMPETITIONS & STARTUPS</div>
+            <h2 class="section-title">竞赛与创业项目</h2>
+            <p style="color: var(--text-sub); margin-top: 10px;">学术科研与商业实践的深度结合。</p>
+        </div>
+        <div class="comp-grid">
+            <!-- 1. 创业 -->
+            <div class="comp-card" onclick="openCompModal('flower')">
+                <span class="comp-tag">创业项目</span>
+                <h3>“pass the romantic”鲜花全链条供应</h3>
+                <p>以大学生为目标群体，独立创立并运营鲜花品牌，负责从采购、包装、营销到售后的全流程管理。</p>
+                <div class="comp-footer">
+                    <span class="comp-date">2023.03 - 2023.09</span>
+                    <span class="comp-link">查看详情 →</span>
+                </div>
+            </div>
+            <!-- 2. iCAN -->
+            <div class="comp-card" onclick="openCompModal('ican')">
+                <span class="comp-tag award">省级一等奖</span>
+                <h3>第十六届 iCAN 创新创业大赛</h3>
+                <p>参赛作品：“Sober”——基于混合域注意力机制的疲劳驾驶检测系统。负责商业定位、竞品分析与定价策略。</p>
+                <div class="comp-footer">
+                    <span class="comp-date">2022.09</span>
+                    <span class="comp-link">查看详情 →</span>
+                </div>
+            </div>
+            <!-- 3. 服务外包 -->
+            <div class="comp-card" onclick="openCompModal('outsourcing')">
+                <span class="comp-tag award">省级三等奖</span>
+                <h3>安徽省大学生服务外包创新创业大赛</h3>
+                <p>基于Sober项目的商业化落地方案，重点探讨服务外包模式与运营策略。</p>
+                <div class="comp-footer">
+                    <span class="comp-date">2022.12</span>
+                    <span class="comp-link">查看详情 →</span>
+                </div>
+            </div>
+            <!-- 4. 三下乡 -->
+            <div class="comp-card" onclick="openCompModal('sanxia')">
+                <span class="comp-tag award">省级立项 / 副队长</span>
+                <h3>“探析宣州产业集群”三下乡实践</h3>
+                <p>作为副队长，协助统筹规划，负责前期与统计局的对接沟通，以及后期的数据分析与活动宣传。</p>
+                <div class="comp-footer">
+                    <span class="comp-date">2022.07</span>
+                    <span class="comp-link">查看详情 →</span>
+                </div>
+            </div>
+            <!-- 5. 挑战杯 -->
+            <div class="comp-card" onclick="openCompModal('challenge')">
+                <span class="comp-tag award">校级二等奖</span>
+                <h3>“挑战杯”课外学术科技作品竞赛</h3>
+                <p>基于三下乡调研数据，深度分析宣州区产业集群现状，建立评价指标体系并完成学术报告。</p>
+                <div class="comp-footer">
+                    <span class="comp-date">2023.05</span>
+                    <span class="comp-link">查看详情 →</span>
+                </div>
+            </div>
+            <!-- 6. 其他获奖 -->
+            <div class="comp-card" onclick="openOtherModal()">
+                <span class="comp-tag">综合荣誉</span>
+                <h3>其他获奖经历</h3>
+                <p>涵盖奖学金、优秀共青团员、各类校级学科竞赛及优秀实践团队等综合荣誉。</p>
+                <div class="comp-footer">
+                    <span class="comp-date">2021 - 2023</span>
+                    <span class="comp-link">查看时间线 →</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 竞赛详情弹窗 -->
+    <div class="modal-overlay" id="compModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close-btn" onclick="closeModal(event)">&times;</span>
+            <h2 id="modalCompTitle" class="modal-title"></h2>
+            <div id="modalCompSubtitle" class="modal-subtitle"></div>
+            <div id="modalCompBody" class="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- 联系方式弹窗 -->
+    <div class="modal-overlay" id="contactModal" onclick="closeModal(event)">
+        <div class="modal-content" style="max-width: 500px; text-align: center;" onclick="event.stopPropagation()">
+            <span class="close-btn" onclick="closeModal(event)">&times;</span>
+            <h2 class="modal-title" style="margin-top: 10px;">联系方式</h2>
+            <p style="color: var(--text-sub); margin-bottom: 30px;">期待与您的交流与合作！</p>
+            
+            <ul class="contact-info-list">
+                <li>
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    <a href="mailto:LiLijing0128@163.com">LiLijing0128@163.com</a>
+                </li>
+                <li>
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                    <a href="tel:15702797985">15702797985</a>
+                </li>
+            </ul>
+            <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="closeModal(event)">关闭</button>
+        </div>
+    </div>
+
+    <!-- 其他获奖弹窗 -->
+    <div class="modal-overlay" id="otherModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close-btn" onclick="closeModal(event)">&times;</span>
+            <h2 class="modal-title">其他获奖经历</h2>
+            <div class="modal-subtitle">综合荣誉与学科竞赛</div>
+            <div class="other-timeline">
+                <div class="other-item">
+                    <div class="other-date">2023.12</div>
+                    <div class="other-title">合肥工业大学三等奖学金</div>
+                </div>
+                <div class="other-item">
+                    <div class="other-date">2022.12</div>
+                    <div class="other-title">合肥工业大学学习进步奖</div>
+                </div>
+                <div class="other-item">
+                    <div class="other-date">2022.07</div>
+                    <div class="other-title">合肥工业大学暑期“三下乡”优秀实践调研报告一等奖、优秀实践图片二等奖等多项荣誉</div>
+                </div>
+                <div class="other-item">
+                    <div class="other-date">2022.04</div>
+                    <div class="other-title">第五届合肥工业大学市场调查与分析大赛 三等奖</div>
+                </div>
+                <div class="other-item">
+                    <div class="other-date">2021.11</div>
+                    <div class="other-title">第七届合肥工业大学宣城校区企业竞争模拟大赛 三等奖</div>
+                </div>
+                <div class="other-item">
+                    <div class="other-date">2021.07</div>
+                    <div class="other-title">第七届安徽省“互联网+”大学生创新创业大赛 初创组铜奖</div>
+                </div>
+                <div class="other-item">
+                    <div class="other-date">2021.05</div>
+                    <div class="other-title">第六届全国学术英语词汇竞赛 三等奖</div>
+                </div>
+                <div class="other-item">
+                    <div class="other-date">2021.03</div>
+                    <div class="other-title">第六届合肥工业大学商业计划书大赛 二等奖</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <p>© 2026 栗丽婧 Lijing Li | 数据驱动未来</p>
+        <p>📧 LiLijing0128@163.com | 📞 15702797985</p>
+    </footer>
+
+    <script>
+        // ================= 1. 简历下载与联系我逻辑 =================
+        function downloadResume() {
+            alert("提示：由于当前处于预览环境，将为您打开打印窗口。您可以选择“另存为 PDF”保存简历。在实际网站中，此按钮将直接下载 resume.pdf 文件。");
+        }
+
+        function openContactModal() {
+            document.getElementById('contactModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // ================= 2. 技能展示切换逻辑 =================
+        const skillsData = {
+            excel: {
+                title: "Excel 高级处理",
+                tag: "FILE 01 / EXCEL",
+                content: `<ul>
+                    <li><b>华发集团 (2025)：</b>收集清洗 <b>15,000 份</b> 问卷数据，多表关联校验，独立搭建动态实时数据更新面板（Dashboard）。</li>
+                    <li><b>山西禾和时尚 (2025)：</b>搭建多维度业务动态看板，按区域、品牌及品类拆解销售表现，定位异常波动。</li>
+                    <li><b>中铁十五局 (2024)：</b>针对50+类建筑材料台账，利用 Excel 对采购、库存与消耗数据进行趋势分析。</li>
+                </ul>`
+            },
+            sql: {
+                title: "SQL 数据提取",
+                tag: "FILE 02 / SQL",
+                content: `<ul>
+                    <li><b>山西禾和时尚 (2025)：</b>独立运用 SQL 从业务数据库中提取门店、品牌与销售流水记录，对近 <b>10万条</b> 交易数据进行 Join、Group by 处理，高效完成异常值清洗。</li>
+                </ul>`
+            },
+            python: {
+                title: "Python (Pandas)",
+                tag: "FILE 03 / PYTHON",
+                content: `<ul>
+                    <li><b>“金银手指”二手交易平台项目：</b>面对平台日益庞大的交易记录，采用 <b>Excel + Python (Pandas)</b> 的方式，实现日常交易记录的自动化清洗与月度交易分析总结，大幅提升运营效率。</li>
+                </ul>`
+            },
+            stata: {
+                title: "STATA 计量建模",
+                tag: "FILE 04 / STATA",
+                content: `<ul>
+                    <li><b>安徽省生产性服务业对产业结构优化的影响研究：</b>抓取并清洗 2010-2020 年安徽省 16 个地级市的面板数据，使用 STATA 进行 <b>Hausman 检验</b>，最终确立固定效应模型完成回归分析。</li>
+                </ul>`
+            },
+            spss: {
+                title: "SPSS 统计检验",
+                tag: "FILE 05 / SPSS",
+                content: `<ul>
+                    <li><b>大学生隐形眼镜使用行为研究：</b>发放467份问卷，利用 SPSS 进行多维交叉分析、列联表卡方检验，构建 <b>结构方程模型 (SEM)</b> 与多分类 Logit 模型。</li>
+                    <li><b>中小城市工业产业集群调研 (三下乡)：</b>深入企业实地访谈，使用 SPSS 进行问卷数据清洗与统计分析。</li>
+                </ul>`
+            }
+        };
+
+        function switchSkill(key, btn) {
+            const data = skillsData[key];
+            document.getElementById('skillTag').innerText = data.tag;
+            document.getElementById('skillTitle').innerText = data.title;
+            const contentEl = document.getElementById('skillContent');
+            contentEl.style.opacity = 0;
+            setTimeout(() => {
+                contentEl.innerHTML = data.content;
+                contentEl.style.opacity = 1;
+            }, 150);
+            document.querySelectorAll('.skill-nav-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        // ================= 3. 评论区式手风琴展开/收起 =================
+        function toggleComment(headerElement) {
+            const item = headerElement.parentElement;
+            const body = item.querySelector('.comment-body');
+            const toggleText = headerElement.querySelector('.comment-toggle span');
+            
+            const isActive = item.classList.contains('active');
+
+            if (isActive) {
+                item.classList.remove('active');
+                body.style.maxHeight = null;
+                toggleText.innerText = '展开';
+            } else {
+                item.classList.add('active');
+                body.style.maxHeight = body.scrollHeight + 'px';
+                toggleText.innerText = '收起';
+            }
+        }
+
+        // ================= 4. 竞赛详情弹窗 =================
+        const compData = {
+            flower: {
+                title: "“pass the romantic”鲜花全链条供应",
+                subtitle: "创始人 / 项目负责人 | 2023.03 - 2023.09",
+                content: `
+                    <h4>创业背景与职责</h4>
+                    <p>以大学生为目标群体，独立创立并运营鲜花品牌，负责从采购、包装、营销到售后的全流程管理。</p>
+                    <h4>核心成果与数据</h4>
+                    <ul>
+                        <li><b>成本与定价：</b>运用财务知识进行成本核算，无场地租借费，货源性价比高，制定具有竞争力的价格体系。</li>
+                        <li><b>全渠道营销：</b>建立QQ、微信、抖音、小红书全平台销售网络，通过新客折扣与老客黏性提高转化率。</li>
+                        <li><b>业绩亮眼：</b>成功促成 <b>28 对爱情</b>，整体回购率高达 <b>86%</b>，好评率与售后满意度均达 100%，获得了人生的第一桶金。</li>
+                    </ul>
+                `
+            },
+            ican: {
+                title: "“Sober”——基于混合域注意力机制的疲劳驾驶检测系统",
+                subtitle: "第十六届 iCAN 省一等奖 | 2022",
+                content: `
+                    <h4>项目背景</h4>
+                    <p>针对长途货运司机疲劳驾驶引发高死亡率交通事故的痛点，团队研发了一款高精度车载检测系统。系统融合了YOLOv5s面部捕捉、IBCLN反光去除、UNet瞳孔预测等前沿技术。</p>
+                    <h4>我的核心职责（商业与财务负责人）</h4>
+                    <ul>
+                        <li><b>市场分析：</b>主导宏观环境（PEST）分析，对比沃尔沃、奔驰等竞品，挖掘长途货运市场的巨大空白；完成SWOT综合分析。</li>
+                        <li><b>商业模式：</b>制定“直销+分销+联盟合作”的营销渠道策略，绘制商业画布（Business Model Canvas）。</li>
+                        <li><b>财务预测：</b>负责项目初期的资金筹措（自筹、天使投资、银行贷款），编制未来五年的资产负债表与现金流量表，确保财务可行性。</li>
+                        <li><b>竞品与定价：</b>针对市面产品误报率高、造价昂贵等缺点，提出低成本、云端部署的差异化定价策略。</li>
+                    </ul>
+                    <img src="cert1.jpg" alt="iCAN省一证书" class="cert-img">
+                `
+            },
+            outsourcing: {
+                title: "安徽省大学生服务外包创新创业大赛",
+                subtitle: "省级三等奖 | 2022.12",
+                content: `
+                    <h4>与 iCAN 项目的渊源</h4>
+                    <p>本项目与 iCAN 大赛基于同一个核心技术底座（Sober 疲劳检测系统），但<b>侧重点完全不同</b>。</p>
+                    <h4>服务外包侧重点</h4>
+                    <ul>
+                        <li><b>落地性与服务模式：</b>重点探讨如何将 Sober 系统转化为可外包、可大规模部署的服务。针对汽车零部件企业、长途客运公司设计了具体的 B2B 服务外包方案。</li>
+                        <li><b>成本与运营结构：</b>深入分析外包服务的成本结构，优化算法部署与云端算力的租赁模式，降低终端的硬件部署成本。</li>
+                    </ul>
+                    <img src="cert2.jpg" alt="服务外包证书" class="cert-img">
+                `
+            },
+            sanxia: {
+                title: "“探析宣州产业集群，助推宣城工业强市”三下乡实践",
+                subtitle: "省级立项 / 副队长 | 2022.07",
+                content: `
+                    <h4>项目背景与我的职责</h4>
+                    <p>作为副队长，协助队长统筹规划。主要负责前期对接宣州区统计局，中期的实地调研与数据收集，以及后期的数据分析与宣传总结。本项目也是后续“挑战杯”参赛作品的原始数据与调研基础。</p>
+                    <h4>核心调研过程</h4>
+                    <ul>
+                        <li><b>实地走访：</b>深入宣州区“两园三集中区”（高新区、经开区等），聚焦“3+2”现代产业体系，走访大中型企业，收集一手经营数据。</li>
+                        <li><b>政企对接：</b>与宣州区统计局建立联系，获取官方宏观经济与工业数据，确保调研的权威性与准确性。</li>
+                        <li><b>成果产出：</b>主笔撰写《中小城市工业产业集群调查研究报告》初稿，荣获“优秀实践调研报告一等奖”。</li>
+                    </ul>
+                    <img src="cert3.jpg" alt="三下乡立项证书" class="cert-img">
+                `
+            },
+            challenge: {
+                title: "“挑战杯”课外学术科技作品竞赛",
+                subtitle: "校级二等奖 | 2023.05",
+                content: `
+                    <h4>与三下乡项目的关系</h4>
+                    <p>本项目是“三下乡”社会实践的<b>学术升华版</b>。将实地走访获得的定性信息，通过构建严谨的计量模型与评价指标体系转化为定量的学术成果。</p>
+                    <h4>我的核心贡献</h4>
+                    <ul>
+                        <li><b>数据清洗与建模：</b>将三下乡收集的问卷数据与统计局年鉴数据结合，运用 SPSS 等工具进行深度清洗。</li>
+                        <li><b>量化评估：</b>探索性运用主成分分析、BP神经网络等模型，对园区产业集群竞争力与创新能力进行量化评估。</li>
+                        <li><b>报告撰写：</b>负责撰写核心数据分析章节，描绘产业集群生长图，提出针对性的对策建议。</li>
+                    </ul>
+                    <img src="cert4.jpg" alt="挑战杯证书" class="cert-img">
+                `
+            }
+        };
+
+        function openCompModal(key) {
+            const data = compData[key];
+            if(!data) return;
+            document.getElementById('modalCompTitle').innerText = data.title;
+            document.getElementById('modalCompSubtitle').innerText = data.subtitle;
+            document.getElementById('modalCompBody').innerHTML = data.content;
+            document.getElementById('compModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function openOtherModal() {
+            document.getElementById('otherModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // ================= 5. 通用关闭弹窗 =================
+        function closeModal(event) {
+            if(event.target.classList.contains('modal-overlay') || event.target.className === 'close-btn' || event.target.innerText === '×'){
+                document.querySelectorAll('.modal-overlay').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // ================= 6. AI 岗位匹配模拟逻辑 =================
+        const aiData = {
+            '数据分析师': {
+                score: '98%',
+                skills: ['Excel', 'SQL', 'Python', 'STATA'],
+                exp: '高度匹配您在 <b>山西禾和时尚科技</b> 的商业分析实习经历：独立运用 SQL 提取近10万条流水数据，利用 Python/Excel 搭建多维看板，精准定位业务异常。同时，您在 <b>华发集团</b> 独立清洗 1.5 万份问卷并搭建 Dashboard 的经验完美契合该岗位的数据处理与可视化要求。'
+            },
+            '商业分析师': {
+                score: '96%',
+                skills: ['Excel', 'SQL', '商业洞察', '竞品分析'],
+                exp: '高度匹配您在 <b>禾和时尚</b> 的竞品分析与策略支持经验，以及 <b>“Sober”疲劳检测项目</b> 中负责的 PEST 宏观分析、商业画布构建和财务模型预测。您具备出色的将数据转化为商业决策依据的能力。'
+            },
+            '产品运营': {
+                score: '92%',
+                skills: ['数据分析', '活动策划', '用户调研'],
+                exp: '您在 <b>华发集团</b> 主导的园区品质宣传与社区活动策划，以及 <b>“pass the romantic”鲜花创业项目</b> 中展现的全渠道营销（QQ/微信/小红书）和高达 86% 的用户复购率，充分证明了您的用户运营与活动策划落地能力。'
+            },
+            '金融风控': {
+                score: '95%',
+                skills: ['Excel', 'SPSS', '风险评估', '计量建模'],
+                exp: '高度匹配您在 <b>代县农信社</b> 的风险管理实习：使用 Excel 清洗 300+ 户逾期客户数据，提取关键风险特征并协助搭建不良资产价值评估模型。您在学术研究中熟练使用 STATA 和 SPSS 进行假设检验，具备扎实的量化分析基础。'
+            },
+            'default': {
+                score: '88%',
+                skills: ['数据分析', '商业分析', '项目统筹'],
+                exp: '栗丽婧具备扎实的经济学与数据科学交叉背景。她不仅在多段实习中积累了海量数据清洗（如1.5万份问卷、10万条流水）与可视化看板的实战经验，还具备从 0 到 1 的商业项目统筹与落地能力，能够快速适应各类商业分析岗位的需求。'
+            }
+        };
+
+        function quickMatch(job) {
+            document.getElementById('jobInput').value = job;
+            startAIMatching();
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') {
+                startAIMatching();
+            }
+        }
+
+        function startAIMatching() {
+            const input = document.getElementById('jobInput').value.trim();
+            if (!input) {
+                alert('请输入您想要匹配的岗位名称！');
+                return;
+            }
+
+            const loading = document.getElementById('aiLoading');
+            const result = document.getElementById('aiResult');
+            
+            // 隐藏之前的结果，显示加载
+            result.classList.remove('active');
+            loading.classList.add('active');
+
+            // 模拟网络请求和AI思考时间 (1.5秒)
+            setTimeout(() => {
+                loading.classList.remove('active');
+                
+                // 获取数据
+                let data = aiData['default'];
+                for (let key in aiData) {
+                    if (input.includes(key)) {
+                        data = aiData[key];
+                        break;
+                    }
+                }
+
+                // 渲染结果
+                document.getElementById('matchScore').innerText = data.score;
+                
+                const skillHTML = data.skills.map(s => `<span class="match-skill-badge">${s}</span>`).join('');
+                document.getElementById('matchSkills').innerHTML = skillHTML;
+                
+                document.getElementById('matchExp').innerHTML = data.exp;
+
+                // 显示结果
+                result.classList.add('active');
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
