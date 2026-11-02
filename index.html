@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>栗丽婧 | 数据探索者 & 商业分析</title>
-    <!-- 引入图标 -->
+    <!-- 保留你的网站图标 -->
     <link rel="icon" href="avatar.jpg" type="image/jpeg">
     <style>
         /* ================= 全局变量与重置 ================= */
@@ -146,9 +146,6 @@
 
         /* ================= 工作经历 (评论区式折叠) ================= */
         .timeline-group { margin-bottom: 80px; }
-        .group-title { font-size: 1.6rem; font-weight: 800; color: #111827; margin-bottom: 30px; display: flex; align-items: center; gap: 10px;}
-        .group-title::before { content: ''; display: block; width: 6px; height: 24px; background: var(--accent-color); border-radius: 4px;}
-
         .comment-list { display: flex; flex-direction: column; gap: 16px; }
         .comment-item {
             background: var(--card-bg); border-radius: 16px; border: 1px solid rgba(0,0,0,0.04);
@@ -255,9 +252,6 @@
             .ai-input-group { flex-direction: column; }
             .ai-input-group button { padding: 16px; }
         }
-
-        /* 悬浮 AI 聊天窗口特有样式 */
-        .highlight { color: var(--accent-color); font-weight: bold; }
     </style>
 </head>
 <body>
@@ -350,7 +344,7 @@
             </div>
 
             <div class="ai-tech-credit">
-                底层 AI 算法驱动：<span>智谱 GLM-4-Flash</span> &nbsp;|&nbsp; 核心解析：大语言模型简历语义理解与岗位特征向量匹配
+                底层 AI 算法驱动：<span>智谱 GLM-4-Flash (Vercel Serverless)</span> &nbsp;|&nbsp; 核心解析：大语言模型语义理解与向量匹配
             </div>
         </div>
     </div>
@@ -712,12 +706,11 @@
         <p>📧 LiLijing0128@163.com | 📞 15702797985</p>
     </footer>
 
-    <!-- 悬浮的 AI 助手按钮 -->
+    <!-- ================= 悬浮 AI 助手组件 开始 ================= -->
     <div id="ai-assistant-btn" onclick="toggleAiChat()" style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: linear-gradient(135deg, #8b5cf6, #3b82f6); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 10px 20px rgba(139, 92, 246, 0.4); z-index: 9999; transition: transform 0.3s;">
         <svg width="30" height="30" fill="white" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.76.46 3.41 1.28 4.84L2 22l5.16-1.28C8.59 21.54 10.24 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
     </div>
 
-    <!-- AI 聊天窗口 -->
     <div id="ai-chat-window" style="position: fixed; bottom: 100px; right: 30px; width: 350px; height: 480px; background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); z-index: 9998; display: none; flex-direction: column; overflow: hidden; border: 1px solid #e5e7eb;">
         <!-- 头部 -->
         <div style="background: linear-gradient(135deg, #8b5cf6, #3b82f6); color: white; padding: 15px 20px; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
@@ -742,16 +735,16 @@
             <button onclick="sendAiMessage()" style="background: #8b5cf6; color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center;">↑</button>
         </div>
     </div>
+    <!-- ================= 悬浮 AI 助手组件 结束 ================= -->
 
     <script>
-        // ⚠️⚠️⚠️ 非常重要的配置 ⚠️⚠️⚠️
+        // ⚠️⚠️⚠️ 唯一的配置项 ⚠️⚠️⚠️
         // 请将下面的 URL 替换为您刚才在 Vercel 上生成的真实后端域名！
-        // 例如：const API_BASE_URL = 'https://lilijing030128githubio.vercel.app';
-        const API_BASE_URL = 'https://lilijing030128github-mishkls52-lukzing03-5506.vercel.app'; 
+        // 例如：const API_BASE_URL = 'https://lilijing-ai.vercel.app';
+        const API_BASE_URL = 'https://YOUR_VERCEL_DOMAIN.vercel.app'; 
 
         // ================= 1. 简历下载与联系我逻辑 =================
         function downloadResume() {
-            // 请确保 resume.pdf 已上传到您的 GitHub 仓库根目录
             window.location.href = 'resume.pdf'; 
         }
 
@@ -928,7 +921,7 @@
             document.body.style.overflow = 'hidden';
         }
 
-        // ================= 5. 通用关闭弹窗 (修复版) =================
+        // ================= 5. 通用关闭弹窗 =================
         function closeModal(event) {
             if(event.target.classList.contains('modal-overlay') || 
                event.target.classList.contains('close-btn') || 
@@ -941,7 +934,7 @@
             }
         }
 
-        // ================= 6. AI 岗位匹配 - 真实大模型接入版 =================
+        // ================= 6. 真实 AI 岗位匹配 =================
         function handleKeyPress(e) {
             if (e.key === 'Enter') {
                 startAIMatching();
@@ -992,12 +985,9 @@
             `;
 
             try {
-                // 调用 Vercel 代理后端
                 const response = await fetch(`${API_BASE_URL}/api/chat`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         messages: [
                             { role: "system", content: systemPrompt },
@@ -1007,10 +997,7 @@
                     })
                 });
 
-                if (!response.ok) {
-                    throw new Error('网络请求失败，请稍后重试');
-                }
-
+                if (!response.ok) throw new Error('网络请求失败');
                 const data = await response.json();
                 const aiText = data.choices[0].message.content;
                 
@@ -1028,11 +1015,11 @@
             } catch (error) {
                 console.error(error);
                 loading.classList.remove('active');
-                alert('AI 匹配失败：' + error.message);
+                alert('AI 匹配失败：' + error.message + '\n请检查 Vercel 域名是否填写正确。');
             }
         }
 
-        // ================= 7. 悬浮 AI 助手 =================
+        // ================= 7. 真实悬浮 AI 助手 =================
         function toggleAiChat() {
             const win = document.getElementById('ai-chat-window');
             win.style.display = win.style.display === 'none' ? 'flex' : 'none';
@@ -1050,16 +1037,18 @@
             
             const chatBox = document.getElementById('ai-chat-messages');
             
+            // 显示用户问题
             chatBox.innerHTML += `<div style="background: #8b5cf6; color: white; padding: 10px 15px; border-radius: 12px; border-bottom-right-radius: 0; align-self: flex-end; max-width: 85%; line-height: 1.5;">${msg}</div>`;
             input.value = '';
             chatBox.scrollTop = chatBox.scrollHeight;
 
+            // 显示加载中
             const loadingId = 'loading-' + Date.now();
             chatBox.innerHTML += `<div id="${loadingId}" style="background: white; padding: 10px 15px; border-radius: 12px; border-bottom-left-radius: 0; max-width: 85%; color: #6b7280; line-height: 1.5;">正在思考中...</div>`;
             chatBox.scrollTop = chatBox.scrollHeight;
 
             try {
-                const systemPrompt = `你是栗丽婧的AI助理。她的基本信息：21岁（2003年1月生），香港理工大学数字经济硕士在读，合肥工业大学经济学本科。精通Excel、SQL、Python、STATA。曾在华发集团、禾和时尚、中铁十五局、代县农信社实习。荣获iCAN省一、挑战杯校二等奖等。请用专业、友好的语气回答HR关于她经历、技能或岗位匹配度的问题。回答尽量简洁，控制在150字以内。`;
+                const systemPrompt = `你是栗丽婧的AI助理。她的基本信息：21岁（2003年1月生），香港理工大学数字经济硕士在读，合肥工业大学经济学本科。精通Excel、SQL、Python、STATA。曾在华发集团、禾和时尚、中铁十五局、代县农信社实习。荣获iCAN省一、挑战杯校二等奖等。请用专业、友好的语气回答HR关于她经历、技能或岗位匹配度的问题。回答尽量简洁，控制在100字以内。`;
 
                 const res = await fetch(`${API_BASE_URL}/api/chat`, {
                     method: 'POST',
@@ -1078,7 +1067,7 @@
                 
                 document.getElementById(loadingId).outerHTML = `<div style="background: white; padding: 10px 15px; border-radius: 12px; border-bottom-left-radius: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); max-width: 85%; line-height: 1.6;">${reply}</div>`;
             } catch (error) {
-                document.getElementById(loadingId).outerHTML = `<div style="background: white; padding: 10px 15px; border-radius: 12px; border-bottom-left-radius: 0; max-width: 85%; color: red; line-height: 1.6;">连接 AI 服务器失败，请稍后再试。</div>`;
+                document.getElementById(loadingId).outerHTML = `<div style="background: white; padding: 10px 15px; border-radius: 12px; border-bottom-left-radius: 0; max-width: 85%; color: red; line-height: 1.6;">连接 AI 服务器失败，请检查域名配置。</div>`;
             }
             chatBox.scrollTop = chatBox.scrollHeight;
         }
