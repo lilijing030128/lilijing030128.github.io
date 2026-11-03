@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>栗丽婧 | 数据探索者 & 商业分析</title>
-    <!-- 保留你的网站图标 -->
     <link rel="icon" href="avatar.jpg" type="image/jpeg">
     <style>
         /* ================= 全局变量与重置 ================= */
@@ -60,7 +59,11 @@
         .tag-hello { display: inline-block; background: #fff; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; color: #059669; border: 1px solid #d1fae5; margin-bottom: 20px; font-weight: bold;}
         .hero-text h1 { font-size: 4.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 15px; color: #111827; }
         .hero-text h1 span { color: #111827; }
-        .hero-text h2 { font-size: 1.8rem; color: var(--accent-color); margin-bottom: 30px; font-weight: 600;}
+        .hero-text h2 { font-size: 1.8rem; color: var(--accent-color); margin-bottom: 20px; font-weight: 600;}
+        .hero-text .ai-hint { font-size: 0.9rem; color: #6b7280; margin-bottom: 30px; display: flex; align-items: center; gap: 8px;}
+        .hero-text .ai-hint span { display: inline-block; width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; animation: pulse 2s infinite;}
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+        
         .hero-actions { display: flex; gap: 15px; margin-bottom: 30px; }
         .btn-primary { background: #111827; color: white; padding: 12px 28px; border-radius: 24px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: transform 0.3s; cursor: pointer; border: none;}
         .btn-secondary { background: white; color: #111827; padding: 12px 28px; border-radius: 24px; font-weight: 600; border: 1px solid #e5e7eb; transition: transform 0.3s; cursor: pointer;}
@@ -236,6 +239,29 @@
         /* ================= 页脚 ================= */
         .footer { text-align: center; padding: 60px 20px; color: var(--text-sub); border-top: 1px solid rgba(0,0,0,0.05); margin-top: 60px; background: rgba(255,255,255,0.3);}
 
+        /* ================= 悬浮 AI 助手气泡 ================= */
+        #ai-assistant-wrapper {
+            position: fixed; bottom: 30px; right: 30px; z-index: 9999;
+            display: flex; align-items: center; justify-content: flex-end;
+        }
+        .ai-bubble {
+            background: var(--ai-gradient); color: white;
+            padding: 12px 24px; border-radius: 30px; font-weight: bold; font-size: 1rem;
+            display: flex; align-items: center; gap: 10px; cursor: pointer;
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: floatBubble 3s ease-in-out infinite;
+        }
+        .ai-bubble:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 35px rgba(139, 92, 246, 0.6); }
+        @keyframes floatBubble { 0% { transform: translateY(0); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0); } }
+
+        #ai-chat-window {
+            position: fixed; bottom: 100px; right: 30px; width: 380px; height: 520px; 
+            background: white; border-radius: 20px; box-shadow: 0 15px 50px rgba(0,0,0,0.15); 
+            z-index: 9998; display: none; flex-direction: column; overflow: hidden; border: 1px solid #e5e7eb;
+            transform-origin: bottom right; transition: all 0.3s;
+        }
+
         /* ================= 响应式 ================= */
         @media (max-width: 1024px) {
             .comp-grid { grid-template-columns: repeat(2, 1fr); }
@@ -251,6 +277,7 @@
             .comp-grid { grid-template-columns: 1fr; }
             .ai-input-group { flex-direction: column; }
             .ai-input-group button { padding: 16px; }
+            #ai-chat-window { width: 90%; right: 5%; bottom: 90px; height: 70vh; }
         }
     </style>
 </head>
@@ -284,6 +311,10 @@
             <div class="tag-hello">● HELLO / 你好</div>
             <h1>Hi,<br>我是<span>栗丽婧</span></h1>
             <h2>Business Analyst / 商业分析</h2>
+            <!-- 引导文案 -->
+            <div class="ai-hint">
+                <span></span> 点击右下角，与我的 AI 数字分身对话了解更多
+            </div>
             <div class="hero-actions">
                 <button class="btn-primary" onclick="downloadResume()">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
@@ -292,7 +323,7 @@
                 <button class="btn-secondary" onclick="openContactModal()">联系我</button>
             </div>
             <div class="skills-preview">
-                <span class="skill-pill">Excel</span>
+                <span class="skill-pill">Excel 高级处理</span>
                 <span class="skill-pill">SQL</span>
                 <span class="skill-pill">Python</span>
                 <span class="skill-pill">STATA</span>
@@ -310,11 +341,11 @@
         <div class="ai-matcher-section">
             <div class="ai-header">
                 <h2>✨ AI 智能岗位匹配</h2>
-                <p>输入您的目标岗位，AI 将根据栗丽婧的简历进行深度适配分析。</p>
+                <p>输入目标岗位，AI 将结合栗丽婧的详实经历进行深度适配分析。</p>
             </div>
             
             <div class="ai-input-group">
-                <input type="text" id="jobInput" placeholder="例如：数据分析师、商业分析师、产品运营..." onkeypress="handleKeyPress(event)">
+                <input type="text" id="jobInput" placeholder="例如：数据分析师、产品运营..." onkeypress="handleKeyPress(event)">
                 <button onclick="startAIMatching()">开始匹配</button>
             </div>
             
@@ -327,7 +358,7 @@
 
             <div class="ai-loading" id="aiLoading">
                 <div class="spinner"></div>
-                <p>大模型正在深度解析简历数据与岗位需求...</p>
+                <p>大模型正在深度解析简历数据...</p>
             </div>
 
             <div class="ai-result-container" id="aiResult">
@@ -344,7 +375,7 @@
             </div>
 
             <div class="ai-tech-credit">
-                底层 AI 算法驱动：<span>智谱 GLM-4-Flash (Vercel Serverless)</span> &nbsp;|&nbsp; 核心解析：大语言模型语义理解与向量匹配
+                底层 AI 算法驱动：<span>智谱 GLM-4-Flash</span> &nbsp;|&nbsp; Vercel Serverless
             </div>
         </div>
     </div>
@@ -362,7 +393,7 @@
                     <div class="edu-date">2026.09 — 至今</div>
                     <div class="edu-school">香港理工大学</div>
                     <div class="edu-major">硕士 / 数字经济学 (QS 50)</div>
-                    <div class="edu-desc">开启研究生阶段学习，主修中级宏观经济、金融学、Python、AI概念及数据结构等课程。致力于将经济学理论与前沿数据科学相结合。</div>
+                    <div class="edu-desc">系统学习中级宏观经济学、金融学、Python编程、AI概念、数据结构与数据库系统等核心课程。致力于将传统经济学分析框架与现代数据科学工具相结合。</div>
                 </div>
             </div>
             <div class="edu-card">
@@ -371,7 +402,7 @@
                     <div class="edu-date">2020.09 — 2024.07</div>
                     <div class="edu-school">合肥工业大学</div>
                     <div class="edu-major">本科 / 经济学 (双一流/211)</div>
-                    <div class="edu-desc">GPA 87.65/100。系统学习经济学理论，熟练掌握SPSS、STATA等分析工具，荣获学习进步奖、三等奖学金，并在各类创新创业竞赛中屡获省级、校级殊荣。</div>
+                    <div class="edu-desc">GPA 87.65/100。构建扎实的经济学理论体系，系统掌握SPSS、STATA等计量建模工具。主动选修C语言、Python、Matlab等课程，具备基础编程逻辑。</div>
                 </div>
             </div>
         </div>
@@ -390,9 +421,9 @@
                 <h3 id="skillTitle">Excel 高级处理</h3>
                 <div id="skillContent">
                     <ul>
-                        <li><b>华发集团 (2025)：</b>收集清洗 <b>15,000 份</b> 问卷数据，多表关联校验，独立搭建动态实时数据更新面板（Dashboard）。</li>
-                        <li><b>山西禾和时尚 (2025)：</b>搭建多维度业务动态看板，按区域、品牌及品类拆解销售表现，定位异常波动。</li>
-                        <li><b>中铁十五局 (2024)：</b>针对50+类建筑材料台账，利用 Excel 对采购、库存与消耗数据进行趋势分析。</li>
+                        <li><b>华发集团：</b>处理海量业主意见问卷，通过 VLOOKUP 进行多表关联，编写复杂嵌套公式（IF、SUMIFS）进行逻辑校验。</li>
+                        <li><b>禾和时尚：</b>搭建多维度业务动态看板，将数据拆解为区域、品牌、品类三级维度。</li>
+                        <li><b>中铁十五局：</b>建立50+类材料台账，运用数据透视表进行时间序列的趋势分析与库存排查。</li>
                     </ul>
                 </div>
             </div>
@@ -406,7 +437,7 @@
         </div>
     </div>
 
-    <!-- 工作经历 (评论区式手风琴) -->
+    <!-- 工作经历 (折叠) -->
     <div class="section-container" id="work-experience">
         <div class="section-header">
             <div class="section-subtitle">03 / WORK EXPERIENCE</div>
@@ -431,11 +462,11 @@
                 </div>
                 <div class="comment-body">
                     <div class="comment-content-inner">
-                        <h4>核心职责 & 数据动作</h4>
+                        <h4>核心动作与挑战</h4>
                         <ul>
-                            <li>统筹园区品质宣传与社区活动策划，主导业主意见征询及满意度调研的数据分析。</li>
-                            <li>收集并清洗 <b>15,000 份</b> 问卷数据，熟练运用 Excel（VLOOKUP、复杂函数公式）进行多表关联与数据校验。</li>
-                            <li>独立搭建动态实时数据更新面板（Dashboard），为园区品质提升及物业费催缴提供强有力的量化决策依据。</li>
+                            <li><b>海量数据清洗：</b>独立负责业主满意度调研数据，运用高级函数进行多表关联与逻辑校验，剔除无效样本，确保底层数据精准。</li>
+                            <li><b>动态看板搭建：</b>摒弃静态报表，独立搭建可按时间、楼栋、问题分类进行多维度切片分析的动态实时面板。</li>
+                            <li><b>业务赋能：</b>通过看板暴露出的痛点，输出量化分析报告，直接为运营团队制定催缴策略和品质提升方案提供数据支撑。</li>
                         </ul>
                     </div>
                 </div>
@@ -457,11 +488,11 @@
                 </div>
                 <div class="comment-body">
                     <div class="comment-content-inner">
-                        <h4>核心职责 & 数据动作</h4>
+                        <h4>核心动作与挑战</h4>
                         <ul>
-                            <li>运用 SQL 从业务数据库中提取门店、品牌与销售流水记录，对近 <b>10万条</b> 交易数据进行清洗与异常值处理。</li>
-                            <li>熟练使用 Excel 搭建多维度业务动态看板，按区域、品牌及品类拆解销售表现并定位异常波动。</li>
-                            <li>收集同商圈竞品的定价与促销数据，撰写竞品分析报告，为调整货品调配与销售策略提供数据支撑。</li>
+                            <li><b>SQL 驱动取数：</b>直接对接业务数据库，运用 Join、Group by 等语句提取门店与销售流水记录，并进行严苛的异常值处理。</li>
+                            <li><b>多维度动态看板：</b>拆解区域、品牌、品类维度，敏锐定位出特定门店在特定时间段的异常销售波动。</li>
+                            <li><b>竞品分析：</b>收集同商圈竞品定价与促销数据，撰写深度报告，为货品调配与促销策略提供精准参考。</li>
                         </ul>
                         <h4>实习证明</h4>
                         <img src="InternshipCertificate1.jpg" alt="禾和时尚实习证明" class="cert-img">
@@ -485,11 +516,11 @@
                 </div>
                 <div class="comment-body">
                     <div class="comment-content-inner">
-                        <h4>核心职责 & 数据动作</h4>
+                        <h4>核心动作与挑战</h4>
                         <ul>
-                            <li>负责材料进出场信息的录入与逻辑校验，建立并维护覆盖 <b>50+类</b> 建筑材料的数字化台账，保障上万条底层数据的准确性。</li>
-                            <li>使用 Excel 对材料采购、库存与消耗数据进行趋势分析，排查出部分材料库存周转偏慢等异常情况。</li>
-                            <li>输出数据简报，为项目部优化后续采购计划与供应链调度提供基础数据参考。</li>
+                            <li><b>台账建设：</b>维护覆盖50+类建筑材料的数字化台账，保障底层数据准确无误。</li>
+                            <li><b>趋势分析：</b>运用数据透视表进行时间序列分析，成功排查出部分材料库存周转偏慢的异常情况。</li>
+                            <li><b>跨部门协同：</b>输出数据简报，提醒项目部优化采购计划，避免资金占用，推动供应链流程优化。</li>
                         </ul>
                         <h4>实习证明</h4>
                         <img src="InternshipCertificate2.jpg" alt="中铁实习证明" class="cert-img">
@@ -513,11 +544,11 @@
                 </div>
                 <div class="comment-body">
                     <div class="comment-content-inner">
-                        <h4>核心职责 & 数据动作</h4>
+                        <h4>核心动作与挑战</h4>
                         <ul>
-                            <li>基于不良资产台账，使用 Excel 对 <b>300+户</b> 逾期客户数据进行清洗与分类。</li>
-                            <li>提取逾期天数、欠款金额等关键风险特征，协助搭建不良资产价值评估模型。</li>
-                            <li>为部门季度风险排查与催收策略提供数据依据。</li>
+                            <li><b>数据清洗与分类：</b>对逾期客户数据进行深度清洗，按逾期天数、欠款金额等多维度进行分类。</li>
+                            <li><b>特征提取：</b>提取关键风险特征，协助部门搭建不良资产价值评估模型。</li>
+                            <li><b>模型评估：</b>利用基础数据分析辅助评估坏账风险，为季度风险排查与催收策略提供量化依据。</li>
                         </ul>
                         <h4>实习证明</h4>
                         <img src="InternshipCertificate3.jpg" alt="代县农信社实习证明" class="cert-img">
@@ -541,11 +572,11 @@
                 </div>
                 <div class="comment-body">
                     <div class="comment-content-inner">
-                        <h4>核心职责 & 动作</h4>
+                        <h4>核心动作与挑战</h4>
                         <ul>
-                            <li>从事市场分析、产业研究、战略规划等工作。</li>
-                            <li>基于市场分析和行业研究，识别企业战略目标，参与制定组织策略与行动计划。</li>
-                            <li>通过优化企业结构和业务流程提升运营效率，协助设计并实施管理系统。</li>
+                            <li>深入研究行业动态，识别企业的战略目标，参与制定组织策略与行动计划。</li>
+                            <li>通过梳理业务流程，提出优化企业结构和提升运营效率的建议。</li>
+                            <li>协助企业设计并落地管理系统、运营系统与生产系统。</li>
                         </ul>
                         <h4>实习证明</h4>
                         <img src="InternshipCertificate4.jpg" alt="锦泽实习证明" class="cert-img">
@@ -555,7 +586,7 @@
         </div>
     </div>
 
-    <!-- 竞赛与创业 (卡片网格) -->
+    <!-- 竞赛与创业 -->
     <div class="section-container" id="competitions">
         <div class="section-header">
             <div class="section-subtitle">04 / COMPETITIONS & STARTUPS</div>
@@ -567,7 +598,7 @@
             <div class="comp-card" onclick="openCompModal('flower')">
                 <span class="comp-tag">创业项目</span>
                 <h3>“pass the romantic”鲜花全链条供应</h3>
-                <p>以大学生为目标群体，独立创立并运营鲜花品牌，负责从采购、包装、营销到售后的全流程管理。</p>
+                <p>敏锐捕捉校园鲜花市场痛点，独立创立专属鲜花品牌，全渠道运营，实现极高的回购率。</p>
                 <div class="comp-footer">
                     <span class="comp-date">2023.03 - 2023.09</span>
                     <span class="comp-link">查看详情 →</span>
@@ -577,7 +608,7 @@
             <div class="comp-card" onclick="openCompModal('ican')">
                 <span class="comp-tag award">省级一等奖</span>
                 <h3>第十六届 iCAN 创新创业大赛</h3>
-                <p>参赛作品：“Sober”——基于混合域注意力机制的疲劳驾驶检测系统。负责商业定位、竞品分析与定价策略。</p>
+                <p>参赛作品：“Sober”——疲劳驾驶检测系统。负责市场分析、商业模式构建与财务预测。</p>
                 <div class="comp-footer">
                     <span class="comp-date">2022.09</span>
                     <span class="comp-link">查看详情 →</span>
@@ -587,7 +618,7 @@
             <div class="comp-card" onclick="openCompModal('outsourcing')">
                 <span class="comp-tag award">省级三等奖</span>
                 <h3>安徽省大学生服务外包创新创业大赛</h3>
-                <p>基于Sober项目的商业化落地方案，重点探讨服务外包模式与运营策略。</p>
+                <p>基于Sober项目的商业化落地方案，重点探讨转化为B2B可外包、可大规模部署的服务。</p>
                 <div class="comp-footer">
                     <span class="comp-date">2022.12</span>
                     <span class="comp-link">查看详情 →</span>
@@ -597,7 +628,7 @@
             <div class="comp-card" onclick="openCompModal('sanxia')">
                 <span class="comp-tag award">省级立项 / 副队长</span>
                 <h3>“探析宣州产业集群”三下乡实践</h3>
-                <p>作为副队长，协助统筹规划，负责前期与统计局的对接沟通，以及后期的数据分析与活动宣传。</p>
+                <p>作为副队长，主导政企对接与实地调研，为后续的学术报告收集一手经营数据。</p>
                 <div class="comp-footer">
                     <span class="comp-date">2022.07</span>
                     <span class="comp-link">查看详情 →</span>
@@ -607,7 +638,7 @@
             <div class="comp-card" onclick="openCompModal('challenge')">
                 <span class="comp-tag award">校级二等奖</span>
                 <h3>“挑战杯”课外学术科技作品竞赛</h3>
-                <p>基于三下乡调研数据，深度分析宣州区产业集群现状，建立评价指标体系并完成学术报告。</p>
+                <p>基于三下乡调研数据，运用 SPSS 进行定性与定量分析，构建评价指标体系。</p>
                 <div class="comp-footer">
                     <span class="comp-date">2023.05</span>
                     <span class="comp-link">查看详情 →</span>
@@ -707,11 +738,13 @@
     </footer>
 
     <!-- ================= 悬浮 AI 助手组件 开始 ================= -->
-    <div id="ai-assistant-btn" onclick="toggleAiChat()" style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: linear-gradient(135deg, #8b5cf6, #3b82f6); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 10px 20px rgba(139, 92, 246, 0.4); z-index: 9999; transition: transform 0.3s;">
-        <svg width="30" height="30" fill="white" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.76.46 3.41 1.28 4.84L2 22l5.16-1.28C8.59 21.54 10.24 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+    <div id="ai-assistant-wrapper" onclick="toggleAiChat()">
+        <div class="ai-bubble">
+            ✨ 对话 AI 助理
+        </div>
     </div>
 
-    <div id="ai-chat-window" style="position: fixed; bottom: 100px; right: 30px; width: 350px; height: 480px; background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); z-index: 9998; display: none; flex-direction: column; overflow: hidden; border: 1px solid #e5e7eb;">
+    <div id="ai-chat-window">
         <!-- 头部 -->
         <div style="background: linear-gradient(135deg, #8b5cf6, #3b82f6); color: white; padding: 15px 20px; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
             <span>✨ 栗丽婧的 AI 助理</span>
@@ -720,13 +753,13 @@
         <!-- 消息区 -->
         <div id="ai-chat-messages" style="flex: 1; padding: 20px; overflow-y: auto; background: #f9fafb; display: flex; flex-direction: column; gap: 15px; font-size: 0.9rem;">
             <div style="background: white; padding: 10px 15px; border-radius: 12px; border-bottom-left-radius: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); max-width: 85%; line-height: 1.5;">
-                您好！我是栗丽婧的 AI 助理。您可以问我关于她的<b>年龄、学历、技能、实习经历或项目</b>等问题哦！
+                您好！我是栗丽婧的 AI 助理，已深度学习了她的详细履历。您可以问我关于她的<b>实习经历、项目细节、技能掌握程度</b>等问题。
             </div>
             <!-- 快捷问题 -->
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <span onclick="askPreset('她多大年龄？')" style="background: #e0e7ff; color: #4f46e5; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; cursor: pointer;">多大年龄？</span>
-                <span onclick="askPreset('她的核心竞争力是什么？')" style="background: #e0e7ff; color: #4f46e5; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; cursor: pointer;">核心竞争力</span>
-                <span onclick="askPreset('她做过什么数据分析项目？')" style="background: #e0e7ff; color: #4f46e5; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; cursor: pointer;">数据分析项目</span>
+                <span onclick="askPreset('她在华发集团具体做了什么？')" style="background: #e0e7ff; color: #4f46e5; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; cursor: pointer;">华发集团做了什么？</span>
+                <span onclick="askPreset('Sober项目中她负责什么？')" style="background: #e0e7ff; color: #4f46e5; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; cursor: pointer;">Sober项目负责什么？</span>
+                <span onclick="askPreset('她的数据分析能力如何？')" style="background: #e0e7ff; color: #4f46e5; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; cursor: pointer;">数据分析能力如何？</span>
             </div>
         </div>
         <!-- 输入区 -->
@@ -740,7 +773,6 @@
     <script>
         // ⚠️⚠️⚠️ 唯一的配置项 ⚠️⚠️⚠️
         // 请将下面的 URL 替换为您刚才在 Vercel 上生成的真实后端域名！
-        // 例如：const API_BASE_URL = 'https://lilijing-ai.vercel.app';
         const API_BASE_URL = 'https://lilijing030128githubio.vercel.app'; 
 
         // ================= 1. 简历下载与联系我逻辑 =================
@@ -759,38 +791,37 @@
                 title: "Excel 高级处理",
                 tag: "FILE 01 / EXCEL",
                 content: `<ul>
-                    <li><b>华发集团 (2025)：</b>收集清洗 <b>15,000 份</b> 问卷数据，多表关联校验，独立搭建动态实时数据更新面板（Dashboard）。</li>
-                    <li><b>山西禾和时尚 (2025)：</b>搭建多维度业务动态看板，按区域、品牌及品类拆解销售表现，定位异常波动。</li>
-                    <li><b>中铁十五局 (2024)：</b>针对50+类建筑材料台账，利用 Excel 对采购、库存与消耗数据进行趋势分析。</li>
+                    <li><b>华发集团：</b>处理海量业主意见问卷，通过 VLOOKUP 进行多表关联，编写复杂嵌套公式（IF、SUMIFS）进行逻辑校验。</li>
+                    <li><b>禾和时尚：</b>搭建多维度业务动态看板，将数据拆解为区域、品牌、品类三级维度。</li>
+                    <li><b>中铁十五局：</b>建立50+类材料台账，运用数据透视表进行时间序列的趋势分析与库存排查。</li>
                 </ul>`
             },
             sql: {
                 title: "SQL 数据提取",
                 tag: "FILE 02 / SQL",
                 content: `<ul>
-                    <li><b>山西禾和时尚 (2025)：</b>独立运用 SQL 从业务数据库中提取门店、品牌与销售流水记录，对近 <b>10万条</b> 交易数据进行 Join、Group by 处理，高效完成异常值清洗。</li>
+                    <li><b>禾和时尚：</b>直接对接业务数据库，运用 Join、Group by 等语句提取门店与销售流水记录，并进行严苛的异常值处理。</li>
                 </ul>`
             },
             python: {
                 title: "Python (Pandas)",
                 tag: "FILE 03 / PYTHON",
                 content: `<ul>
-                    <li><b>“金银手指”二手交易平台项目：</b>面对平台日益庞大的交易记录，采用 <b>Excel + Python (Pandas)</b> 的方式，实现日常交易记录的自动化清洗与月度交易分析总结，大幅提升运营效率。</li>
+                    <li><b>“金银手指”二手平台：</b>掌握基础语法，能利用 Pandas 库进行自动化数据清洗、合并与月度交易分析。</li>
                 </ul>`
             },
             stata: {
                 title: "STATA 计量建模",
                 tag: "FILE 04 / STATA",
                 content: `<ul>
-                    <li><b>安徽省生产性服务业对产业结构优化的影响研究：</b>抓取并清洗 2010-2020 年安徽省 16 个地级市的面板数据，使用 STATA 进行 <b>Hausman 检验</b>，最终确立固定效应模型完成回归分析。</li>
+                    <li><b>学术科研：</b>熟练掌握 Hausman 检验、固定效应模型回归分析等高级计量方法，具备深度的学术实证分析能力。</li>
                 </ul>`
             },
             spss: {
                 title: "SPSS 统计检验",
                 tag: "FILE 05 / SPSS",
                 content: `<ul>
-                    <li><b>大学生隐形眼镜使用行为研究：</b>发放467份问卷，利用 SPSS 进行多维交叉分析、列联表卡方检验，构建 <b>结构方程模型 (SEM)</b> 与多分类 Logit 模型。</li>
-                    <li><b>中小城市工业产业集群调研 (三下乡)：</b>深入企业实地访谈，使用 SPSS 进行问卷数据清洗与统计分析。</li>
+                    <li><b>三下乡调研：</b>将收集到的问卷数据与年鉴数据结合，运用 SPSS 进行定性与定量分析，构建评价指标体系。</li>
                 </ul>`
             }
         };
@@ -835,12 +866,12 @@
                 subtitle: "创始人 / 项目负责人 | 2023.03 - 2023.09",
                 content: `
                     <h4>创业背景与职责</h4>
-                    <p>以大学生为目标群体，独立创立并运营鲜花品牌，负责从采购、包装、营销到售后的全流程管理。</p>
+                    <p>面对大学生群体对仪式感的追求与高昂鲜花价格的矛盾，她敏锐捕捉到校园鲜花市场的痛点，独立创立了专属鲜花品牌。</p>
                     <h4>核心成果与数据</h4>
                     <ul>
-                        <li><b>成本与定价：</b>运用财务知识进行成本核算，无场地租借费，货源性价比高，制定具有竞争力的价格体系。</li>
-                        <li><b>全渠道营销：</b>建立QQ、微信、抖音、小红书全平台销售网络，通过新客折扣与老客黏性提高转化率。</li>
-                        <li><b>业绩亮眼：</b>成功促成 <b>28 对爱情</b>，整体回购率高达 <b>86%</b>，好评率与售后满意度均达 100%，获得了人生的第一桶金。</li>
+                        <li><b>成本与定价策略：</b>运用本科所学的财务知识进行精准成本核算，制定出极具竞争力的价格体系。</li>
+                        <li><b>全渠道营销：</b>建立全平台销售矩阵，通过新客折扣与社群互动增强老客黏性。</li>
+                        <li><b>业绩亮眼：</b>整体回购率高达 <b>86%</b>，好评率与售后满意度双双达到 <b>100%</b>，验证了将商业理论转化为实际落地的能力。</li>
                     </ul>
                 `
             },
@@ -848,14 +879,11 @@
                 title: "“Sober”——基于混合域注意力机制的疲劳驾驶检测系统",
                 subtitle: "第十六届 iCAN 省一等奖 | 2022",
                 content: `
-                    <h4>项目背景</h4>
-                    <p>针对长途货运司机疲劳驾驶引发高死亡率交通事故的痛点，团队研发了一款高精度车载检测系统。系统融合了YOLOv5s面部捕捉、IBCLN反光去除、UNet瞳孔预测等前沿技术。</p>
-                    <h4>我的核心职责（商业与财务负责人）</h4>
+                    <h4>核心角色（商业与财务负责人）</h4>
                     <ul>
-                        <li><b>市场分析：</b>主导宏观环境（PEST）分析，对比沃尔沃、奔驰等竞品，挖掘长途货运市场的巨大空白；完成SWOT综合分析。</li>
-                        <li><b>商业模式：</b>制定“直销+分销+联盟合作”的营销渠道策略，绘制商业画布（Business Model Canvas）。</li>
-                        <li><b>财务预测：</b>负责项目初期的资金筹措（自筹、天使投资、银行贷款），编制未来五年的资产负债表与现金流量表，确保财务可行性。</li>
-                        <li><b>竞品与定价：</b>针对市面产品误报率高、造价昂贵等缺点，提出低成本、云端部署的差异化定价策略。</li>
+                        <li><b>市场分析：</b>主导 PEST 分析，精准锁定长途货运市场这一巨大空白。对比竞品监测逻辑，确立差异化优势。</li>
+                        <li><b>商业模式：</b>绘制商业画布（Business Model Canvas），制定渠道策略。</li>
+                        <li><b>财务预测：</b>负责项目初期的资金筹措方案，编制了未来五年的资产负债表与现金流量表，证明了项目的财务可行性。</li>
                     </ul>
                     <img src="cert1.jpg" alt="iCAN省一证书" class="cert-img">
                 `
@@ -864,13 +892,8 @@
                 title: "安徽省大学生服务外包创新创业大赛",
                 subtitle: "省级三等奖 | 2022.12",
                 content: `
-                    <h4>与 iCAN 项目的渊源</h4>
-                    <p>本项目与 iCAN 大赛基于同一个核心技术底座（Sober 疲劳检测系统），但<b>侧重点完全不同</b>。</p>
-                    <h4>服务外包侧重点</h4>
-                    <ul>
-                        <li><b>落地性与服务模式：</b>重点探讨如何将 Sober 系统转化为可外包、可大规模部署的服务。针对汽车零部件企业、长途客运公司设计了具体的 B2B 服务外包方案。</li>
-                        <li><b>成本与运营结构：</b>深入分析外包服务的成本结构，优化算法部署与云端算力的租赁模式，降低终端的硬件部署成本。</li>
-                    </ul>
+                    <h4>双胞胎赛道的差异化</h4>
+                    <p>与 iCAN 基于同一个核心技术底座（Sober 疲劳检测系统），但在本赛道中重点探讨如何将其转化为可外包、可大规模部署的 B2B 服务（针对汽车零部件企业），深入分析外包服务的成本与云算力租赁模式。</p>
                     <img src="cert2.jpg" alt="服务外包证书" class="cert-img">
                 `
             },
@@ -878,13 +901,11 @@
                 title: "“探析宣州产业集群，助推宣城工业强市”三下乡实践",
                 subtitle: "省级立项 / 副队长 | 2022.07",
                 content: `
-                    <h4>项目背景与我的职责</h4>
-                    <p>作为副队长，协助队长统筹规划。主要负责前期对接宣州区统计局，中期的实地调研与数据收集，以及后期的数据分析与宣传总结。本项目也是后续“挑战杯”参赛作品的原始数据与调研基础。</p>
-                    <h4>核心调研过程</h4>
+                    <h4>核心角色（副队长）</h4>
                     <ul>
-                        <li><b>实地走访：</b>深入宣州区“两园三集中区”（高新区、经开区等），聚焦“3+2”现代产业体系，走访大中型企业，收集一手经营数据。</li>
-                        <li><b>政企对接：</b>与宣州区统计局建立联系，获取官方宏观经济与工业数据，确保调研的权威性与准确性。</li>
-                        <li><b>成果产出：</b>主笔撰写《中小城市工业产业集群调查研究报告》初稿，荣获“优秀实践调研报告一等奖”。</li>
+                        <li><b>前期政企对接：</b>负责与宣州区统计局进行深度对接，获取官方宏观经济与工业数据。</li>
+                        <li><b>实地调研：</b>深入“两园三集中区”，走访大中型企业，针对不同园区的特点设计了专属的调研问卷。</li>
+                        <li><b>学术升华（挑战杯）：</b>将调研数据与年鉴数据结合，运用 SPSS 进行定性与定量分析，构建评价指标体系，描绘产业集群生长图，荣获“挑战杯”校级二等奖。</li>
                     </ul>
                     <img src="cert3.jpg" alt="三下乡立项证书" class="cert-img">
                 `
@@ -894,12 +915,11 @@
                 subtitle: "校级二等奖 | 2023.05",
                 content: `
                     <h4>与三下乡项目的关系</h4>
-                    <p>本项目是“三下乡”社会实践的<b>学术升华版</b>。将实地走访获得的定性信息，通过构建严谨的计量模型与评价指标体系转化为定量的学术成果。</p>
+                    <p>本项目是“三下乡”社会实践的学术升华版。将实地走访获得的定性信息，通过构建严谨的计量模型与评价指标体系转化为定量的学术成果。</p>
                     <h4>我的核心贡献</h4>
                     <ul>
-                        <li><b>数据清洗与建模：</b>将三下乡收集的问卷数据与统计局年鉴数据结合，运用 SPSS 等工具进行深度清洗。</li>
-                        <li><b>量化评估：</b>探索性运用主成分分析、BP神经网络等模型，对园区产业集群竞争力与创新能力进行量化评估。</li>
-                        <li><b>报告撰写：</b>负责撰写核心数据分析章节，描绘产业集群生长图，提出针对性的对策建议。</li>
+                        <li><b>数据清洗与建模：</b>将收集的问卷数据与统计局年鉴数据结合，运用 SPSS 等工具进行深度清洗与建模。</li>
+                        <li><b>报告撰写：</b>负责撰写核心数据分析章节，提出针对性的对策建议。</li>
                     </ul>
                     <img src="cert4.jpg" alt="挑战杯证书" class="cert-img">
                 `
@@ -960,16 +980,19 @@
             loading.classList.add('active');
 
             const RESUME_PROMPT = `
-                你是一位资深的HR。这是候选人栗丽婧的简历摘要：
-                【教育】香港理工大学数字经济硕士（在读），合肥工业大学经济学本科（GPA 87.65）。
-                【技能】精通Excel（VLOOKUP/复杂函数/数据透视）、SQL、Python(Pandas)、STATA、SPSS。
+                你是一位资深的HR和业务面试官。这是候选人栗丽婧的详细简历参考：
+                【教育】香港理工大学数字经济硕士（在读，QS50），合肥工业大学经济学本科（GPA 87.65）。
+                【技能】精通Excel（VLOOKUP/复杂函数/数据透视/Dashboard）、SQL（多表关联/分组聚合）、Python(Pandas)、STATA、SPSS。
                 【实习】
-                1. 华发集团（运营）：清洗1.5万份问卷，搭建Dashboard。
-                2. 禾和时尚（商业分析）：SQL处理10万条交易数据，搭建多维看板，撰写竞品分析。
-                3. 中铁十五局（数据）：维护50+类材料台账，趋势分析。
-                4. 代县农信社（风控）：清洗300+户逾期数据，协助搭建资产评估模型。
-                5. 锦泽工程（管理顾问）：市场分析、产业研究、战略规划。
-                【竞赛/创业】鲜花创业项目创始人（回购率86%）；iCAN省一、服务外包省三、三下乡省级立项（副队长）、挑战杯校二等奖。
+                1. 华发集团（运营）：处理海量业主满意度问卷，进行逻辑校验，搭建动态实时数据更新Dashboard，为物业费催缴提供量化决策。
+                2. 禾和时尚（商业分析）：对接业务数据库提取销售流水，处理异常值，搭建区域/品牌/品类三级维度看板，撰写深度竞品分析报告。
+                3. 中铁十五局（数据）：维护50+类材料台账，运用数据透视表进行时间序列分析，排查库存周转异常并输出简报优化采购。
+                4. 代县农信社（风控）：清洗逾期客户数据，提取风险特征，协助搭建不良资产价值评估模型。
+                5. 锦泽工程（管理顾问）：主导市场分析、产业研究、战略规划与业务流程优化。
+                【竞赛/创业】
+                - 作为商业与财务负责人，参与“Sober”疲劳驾驶检测系统，主导PEST分析、商业画布与五年财务预测。
+                - 作为副队长，参与“探析宣州产业集群”三下乡调研，运用SPSS进行实证分析，获挑战杯校二等奖。
+                - 独立创立“pass the romantic”鲜花品牌，全渠道运营，实现极高复购率。
             `;
 
             const systemPrompt = `
@@ -980,7 +1003,7 @@
                     "score": "95%",
                     "title": "极高匹配度！",
                     "skills": ["技能1", "技能2", "技能3"],
-                    "exp": "结合简历中的某段具体经历，说明为什么匹配这个岗位。字数控制在80-120字。"
+                    "exp": "结合简历中的某段具体经历，说明为什么匹配这个岗位。语言要专业、流畅，字数控制在80-120字。"
                 }
             `;
 
@@ -1048,7 +1071,157 @@
             chatBox.scrollTop = chatBox.scrollHeight;
 
             try {
-                const systemPrompt = `你是栗丽婧的AI助理。她的基本信息：21岁（2003年1月生），香港理工大学数字经济硕士在读，合肥工业大学经济学本科。精通Excel、SQL、Python、STATA。曾在华发集团、禾和时尚、中铁十五局、代县农信社实习。荣获iCAN省一、挑战杯校二等奖等。请用专业、友好的语气回答HR关于她经历、技能或岗位匹配度的问题。回答尽量简洁，控制在100字以内。`;
+                // 将详细的 PDF 内容作为背景知识塞入 System Prompt
+                const systemPrompt = `
+                    你是栗丽婧的专属AI助理，旨在向HR或面试官展示她的专业能力。请基于以下栗丽婧的详细履历回答问题，语气要专业、自信、友好。
+                    
+                    栗丽婧：数据探索者与商业分析的深度实践档案
+序言：从理论经济到数据实战的跨界之旅
+栗丽婧，中共党员，一位具备深厚经济学底蕴与前沿数据科学技能的复合型人才。本科毕业于合肥工业大学（双一流/211）经济学专业，以GPA 87.65/100的优异成绩屡获奖学金；目前于QS世界排名前50的香港理工大学攻读数字经济学硕士学位。她的职业轨迹跨越了国企、金融、制造、时尚与互联网等多个领域，始终致力于用数据解构商业逻辑，用分析赋能业务决策。本档案将深度解析其在各个真实项目中承担的核心职责与实战成果。
+
+第一章：学术沉淀与知识图谱
+1.1 香港理工大学（QS 50）| 数字经济学硕士（2026.09 - 至今）
+在数字经济浪潮下，栗丽婧选择赴港深造，系统学习中级宏观经济学、金融学、Python编程、AI概念、数据结构与数据库系统等核心课程。
+
+学术目标：致力于将传统的经济学分析框架（如供需模型、投入产出分析）与现代数据科学工具（如机器学习、大数据处理）相结合，探索数字经济时代下的商业新范式。
+
+技能精进：在研究生阶段，她不仅强化了Python（Pandas/Numpy）的数据处理能力，还深入理解了数据库的底层逻辑，能够独立完成从数据获取、清洗、建模到可视化的全流程闭环。
+
+1.2 合肥工业大学（双一流/211）| 经济学本科（2020.09 - 2024.07）
+本科期间，她构建了扎实的经济学理论体系，并早早展现出对数据分析和商业实践的热情。
+
+优异成绩：GPA 87.65/100，荣获校级三等奖学金及“学习进步奖”。
+
+核心课程：宏观/微观经济学、计量经济学、统计学、金融学、市场营销、经济法。系统掌握了SPSS、STATA等计量建模工具，为后续的实证研究打下基础。
+
+跨界拓展：主动选修C语言、Python、Matlab等课程，掌握了基础编程逻辑（能读懂数据结构与嵌套逻辑），打破了纯文科生的技能边界。
+
+第二章：五段硬核实习，淬炼数据洞察力
+2.1 华发集团 | 项目运营专员（2025.11 - 2026.07）
+项目背景：华发集团作为大型国企，其园区品质与物业服务直接关系到业主满意度与企业品牌。面对海量的业主反馈数据，传统的问卷统计方式效率低下，难以支撑精细化管理。
+核心动作与挑战：
+
+海量数据清洗：栗丽婧独立负责业主意见征询及满意度调研。面对回收的 15,000份 问卷数据，她熟练运用 Excel 高级功能，通过 VLOOKUP 函数进行多表关联（如将业主基本信息表与问卷结果表匹配），并编写复杂嵌套公式（如 IF、SUMIFS）进行数据逻辑校验，剔除了大量无效、重复样本，确保了底层数据的绝对精准。
+
+动态看板搭建：为了直观展示园区各维度的满意度情况，她摒弃了静态报表，独立搭建了一个动态实时数据更新面板（Dashboard）。该看板可按时间、楼栋、问题分类进行多维度切片分析。
+
+业务赋能：通过看板暴露出的“部分区域物业费催缴困难、设施老化”等痛点，她输出量化分析报告，直接为运营团队制定催缴策略和品质提升方案提供了强有力的数据支撑。
+(附实习证明)
+
+2.2 山西禾和时尚科技有限公司 | 商业分析助理（2025.01 - 2025.08）
+项目背景：在竞争激烈的时尚零售行业，如何快速发现不同门店、不同品牌的销售异动，并制定针对性的促销与货品调配策略，是企业盈利的关键。
+核心动作与挑战：
+
+SQL 驱动取数：她直接对接公司业务数据库，独立运用 SQL 语句（包含 Join 多表连接、Group by 分组聚合、Where 条件筛选等）提取门店、品牌与销售流水记录。
+
+十万级交易数据清洗：针对提取出的近 10万条 交易流水，她进行了严苛的数据清洗与异常值处理。例如，剔除因系统错误导致的负数订单、识别并处理缺失的品类标签，确保数据质量。
+
+多维度动态看板：她使用 Excel 搭建了多维度业务动态看板，将复杂的数据拆解为区域、品牌、品类三级维度。在分析中，她敏锐地定位出某些门店在特定时间段的异常销售波动。
+
+竞品分析：她不仅关注内部数据，还主动收集同商圈竞品的定价与促销数据，撰写深度的竞品分析报告。基于这些洞察，运营团队成功调整了货品调配策略，并为后续的销售活动提供了精准的定价参考。
+(附实习证明)
+
+2.3 中铁十五局集团有限公司沪宁段项目部 | 数据实习生（2024.09 - 2024.12）
+项目背景：大型基建项目（如沪宁段高铁）涉及极其复杂的供应链管理和成本控制，工程材料的进、出、存数据一旦混乱，将直接导致项目延期或超支。
+核心动作与挑战：
+
+台账建设与数据校验：她负责工程材料进出场信息的录入与逻辑校验，建立并维护了一套覆盖 50+类 建筑材料的数字化台账，保障了上万条底层数据的准确无误。
+
+趋势分析：她运用 Excel 数据透视表，对各类材料的采购量、库存量、消耗量进行时间序列的趋势分析。
+
+排查异常：在分析中，她成功排查出部分材料（如特定型号钢材）库存周转偏慢的异常情况。通过输出数据简报，提醒项目部优化后续采购计划，避免资金占用。
+
+跨部门协同：她积极参与营销、采购与生产团队的跨部门沟通，确保数据分析结果能真正落地，推动供应链流程优化。
+(附实习证明)
+
+2.4 代县农村信用合作联社 | 风险管理实习生（2024.01 - 2024.02）
+项目背景：金融机构的不良资产处置直接关系到信用风险的控制。基层农信社面临大量逾期客户，如何科学评估资产价值并制定催收策略是核心难题。
+核心动作与挑战：
+
+数据清洗与分类：她基于农信社的不良资产台账，使用 Excel 对 300+户 逾期客户数据进行了深度清洗与分类（按逾期天数、欠款金额、客户属性等维度）。
+
+特征提取：她巧妙提取了“逾期天数”、“欠款金额”等关键风险特征。
+
+模型评估：协助部门搭建不良资产价值评估模型，利用基础的数据分析（如描述性统计、分组对比）辅助评估坏账风险，为部门季度风险排查与催收策略的制定提供了科学的量化依据。
+(附实习证明)
+
+2.5 山西锦泽工程科技有限公司 | 管理顾问（2022.12 - 2023.01）
+项目背景：作为咨询顾问，需要帮助企业应对市场变化，优化内部管理架构，提升运营效率。
+核心动作与挑战：
+
+市场与产业研究：深入研究相关行业动态，识别企业的战略目标。
+
+策略制定：参与制定企业组织策略与行动计划，通过梳理业务流程，提出优化企业结构和提升运营效率的建议。
+
+系统实施：协助企业设计并落地管理系统、运营系统与生产系统，展现了出色的逻辑思维与咨询落地能力。
+(附实习证明)
+
+第三章：学术科研与商业竞赛的“双子星”
+栗丽婧的竞赛经历并非散沙，而是呈现出极强的连贯性与“双胞胎”特征——基于同一个核心底座，在不同赛道（学术、商业）进行侧重点的差异化挖掘。
+
+3.1 “Sober”疲劳驾驶检测系统（iCAN省一 / 互联网+校银 / 服务外包省三）
+项目背景：疲劳驾驶是导致长途货运交通事故的头号杀手。团队研发了基于混合域注意力机制的检测系统（融合YOLOv5s、IBCLN反光去除、UNet瞳孔预测等技术）。
+她的核心角色（商业与财务负责人）：
+
+市场宏观与微观分析：主导 PEST 分析（政治、经济、社会、技术），精准锁定长途货运市场这一巨大空白。对比沃尔沃、奔驰等竞品的监测逻辑，确立了产品的差异化优势。
+
+商业模式构建：绘制商业画布（Business Model Canvas），制定了“直销+分销+联盟合作”的渠道策略。
+
+严谨的财务预测：负责项目初期的资金筹措方案（自筹、天使投资、银行贷款），编制了未来五年的资产负债表与现金流量表，证明了项目的财务可行性。
+
+双胞胎赛道的差异化：
+
+在 iCAN 中，重点展示完整的商业计划与前沿技术结合（获省级一等奖）。
+
+在 服务外包大赛 中，她重点探讨如何将 Sober 系统转化为可外包、可大规模部署的 B2B 服务（针对汽车零部件企业），深入分析外包服务的成本与云算力租赁模式（获省级三等奖）。
+(附相关证书)
+
+3.2 “探析宣州产业集群”三下乡与挑战杯
+项目背景：宣州区正全力构建“3+2”现代产业体系（精细化工、智能装备、碳酸钙新材料+绿色食品、家居卫浴）。团队前往当地进行深度调研。
+她的核心角色（副队长）：
+
+前期政企对接：作为副队长，她负责与宣州区统计局进行深度对接。通过线上（平台审核、微信沟通）与线下（实地走访办公室）的方式，获取了官方宏观经济与工业数据。
+
+实地调研与数据收集：深入“两园三集中区”（高新区、经开区等），走访大中型企业，收集一手经营数据。针对不同园区的特点，设计了专属的调研问卷（涵盖企业概况、融资情况、人才培养、研发投入等）。
+
+学术升华（挑战杯）：将三下乡获得的海量问卷数据与统计局年鉴数据结合，运用 SPSS 进行定性与定量分析。探索性构建评价指标体系，描绘产业集群生长图，最终完成高质量的学术报告，荣获“挑战杯”校级二等奖。
+
+第四章：从0到1的创业实践
+“pass the romantic”鲜花全链条供应 | 创始人（2023.03 - 2023.09）
+创业背景：面对大学生群体对仪式感的追求与高昂鲜花价格的矛盾，她敏锐捕捉到校园鲜花市场的痛点，独立创立了专属鲜花品牌。
+全流程管理与数据赋能：
+
+成本与定价策略：运用本科所学的财务知识进行精准成本核算。通过无实体店面、直接对接高性价比货源等方式压缩成本，制定出极具竞争力的价格体系。
+
+全渠道营销与用户运营：建立QQ、微信、抖音、小红书全平台销售矩阵。通过新客折扣吸引流量，利用良好的售后服务和社群互动增强老客黏性。
+
+傲人的业绩数据：项目运营期间，成功促成 28 对爱情，整体回购率高达 86%，好评率与售后满意度双双达到 100%。这不仅是一次商业实践，更为她赚取了人生的第一桶金，充分验证了她将商业理论转化为实际落地的能力。
+
+第五章：数据工具图谱与底层逻辑
+在她的所有经历中，数据工具不是花架子，而是解决实际业务痛点的利器：
+
+Excel（精通级）：不仅停留在基础制表。她能熟练运用 VLOOKUP、INDEX-MATCH 进行多表关联；利用数据透视表进行多维汇总；使用条件格式与复杂逻辑函数搭建动态 Dashboard（如华发集团、禾和时尚）。
+
+SQL（熟练级）：能独立编写包含 Join、Group by 等复杂查询语句，从海量业务库中精准提取所需数据并进行初步清洗（如禾和时尚）。
+
+Python（Pandas）：掌握基础语法，能利用 Pandas 库进行自动化数据清洗、合并与月度交易分析（如“金银手指”二手平台）。
+
+STATA & SPSS（学术级）：熟练掌握 Hausman 检验、固定效应模型回归分析、结构方程模型（SEM）、多分类 Logit 模型等高级计量方法，具备深度的学术实证分析能力。
+
+第六章：校园领导力与社会责任
+班级骨干：担任班长及团支部副支书期间，负责班级日常管理与学术事务组织，获评“优秀共青团员”与“优秀学生干部”。
+
+志愿服务：积极参与联合国儿童基金会（UNICEF）月捐项目，持续为贫困儿童提供教育与医疗支持。在宣城博物馆、社区反诈宣传、迎新活动中累计提供数十小时志愿服务。
+
+结语：
+栗丽婧的履历证明，她并非单纯的技术派或理论派。她最核心的竞争力在于——懂业务的数据分析能力。无论是在中铁十五局排雷供应链，还是在时尚品牌洞察市场，亦或是在金融体系评估风险，她都能熟练调用数据工具，拨开业务迷雾，提供精准的量化决策依据。这种跨界融合的复合型能力，正是当今数字经济时代最稀缺的资产。
+
+                    
+                    【回答要求】
+                    1. 当HR问到具体项目时，请详细描述她承担的“动作”和“业务逻辑”，不要只罗列数字，要展现出她“懂业务的数据分析能力”。
+                    2. 语言要自然流畅，像一位专业的职场顾问在介绍候选人。
+                    3. 如果问到不知道的，请礼貌地提示对方可以下载她的PDF简历或发邮件联系。控制在150字以内。
+                `;
 
                 const res = await fetch(`${API_BASE_URL}/api/chat`, {
                     method: 'POST',
@@ -1057,7 +1230,8 @@
                         messages: [
                             { role: 'system', content: systemPrompt },
                             { role: 'user', content: msg }
-                        ]
+                        ],
+                        temperature: 0.6
                     })
                 });
 
@@ -1067,7 +1241,7 @@
                 
                 document.getElementById(loadingId).outerHTML = `<div style="background: white; padding: 10px 15px; border-radius: 12px; border-bottom-left-radius: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); max-width: 85%; line-height: 1.6;">${reply}</div>`;
             } catch (error) {
-                document.getElementById(loadingId).outerHTML = `<div style="background: white; padding: 10px 15px; border-radius: 12px; border-bottom-left-radius: 0; max-width: 85%; color: red; line-height: 1.6;">连接 AI 服务器失败，请检查域名配置。</div>`;
+                document.getElementById(loadingId).outerHTML = `<div style="background: white; padding: 10px 15px; border-radius: 12px; border-bottom-left-radius: 0; max-width: 85%; color: red; line-height: 1.6;">连接 AI 服务器失败，请检查网络配置。</div>`;
             }
             chatBox.scrollTop = chatBox.scrollHeight;
         }
