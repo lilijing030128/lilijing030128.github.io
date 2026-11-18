@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>栗丽婧 | 数据探索者 & 商业分析</title>
-    <link rel="icon" href="avatar.jpg" type="image/jpeg">
     <style>
         /* ================= 全局变量与重置 ================= */
         :root {
@@ -45,13 +44,21 @@
             background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(16px);
             border-radius: 32px; box-shadow: var(--shadow); border: 1px solid rgba(255, 255, 255, 0.5);
         }
-        .navbar .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.1rem; color: #111827;}
+        .navbar .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.1rem; color: #111827; white-space: nowrap;}
         .navbar .logo img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
         .nav-links { display: flex; gap: 20px; list-style: none; font-size: 0.9rem; font-weight: 600; color: #374151;}
         .nav-links li a { transition: all 0.3s; padding: 8px 12px; border-radius: 20px;}
         .nav-links li a:hover { color: var(--accent-color); background: var(--accent-light); }
-        .nav-btn { background: #111827; color: #fff; border: none; padding: 10px 20px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+
+        .nav-actions { display: flex; align-items: center; gap: 10px; }
+        .nav-btn { background: #111827; color: #fff; border: none; padding: 10px 20px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.3s; white-space: nowrap;}
         .nav-btn:hover { background: var(--accent-color); transform: translateY(-2px); box-shadow: var(--glow); }
+        .lang-btn {
+            background: transparent; color: #374151; border: 1px solid #e5e7eb;
+            padding: 9px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 700;
+            cursor: pointer; transition: all 0.3s; min-width: 52px;
+        }
+        .lang-btn:hover { border-color: var(--accent-color); color: var(--accent-color); background: var(--accent-light); }
 
         /* ================= 首屏 Hero ================= */
         .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 120px 5% 0; max-width: 1200px; margin: 0 auto; gap: 40px; }
@@ -59,11 +66,7 @@
         .tag-hello { display: inline-block; background: #fff; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; color: #059669; border: 1px solid #d1fae5; margin-bottom: 20px; font-weight: bold;}
         .hero-text h1 { font-size: 4.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 15px; color: #111827; }
         .hero-text h1 span { color: #111827; }
-        .hero-text h2 { font-size: 1.8rem; color: var(--accent-color); margin-bottom: 20px; font-weight: 600;}
-        .hero-text .ai-hint { font-size: 0.9rem; color: #6b7280; margin-bottom: 30px; display: flex; align-items: center; gap: 8px;}
-        .hero-text .ai-hint span { display: inline-block; width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; animation: pulse 2s infinite;}
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-        
+        .hero-text h2 { font-size: 1.8rem; color: var(--accent-color); margin-bottom: 30px; font-weight: 600;}
         .hero-actions { display: flex; gap: 15px; margin-bottom: 30px; }
         .btn-primary { background: #111827; color: white; padding: 12px 28px; border-radius: 24px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: transform 0.3s; cursor: pointer; border: none;}
         .btn-secondary { background: white; color: #111827; padding: 12px 28px; border-radius: 24px; font-weight: 600; border: 1px solid #e5e7eb; transition: transform 0.3s; cursor: pointer;}
@@ -91,7 +94,7 @@
         .ai-input-group { display: flex; gap: 15px; max-width: 700px; margin: 0 auto 30px; position: relative; z-index: 1;}
         .ai-input-group input { flex: 1; padding: 16px 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: white; font-size: 1rem; outline: none; transition: all 0.3s;}
         .ai-input-group input:focus { border-color: var(--accent-color); background: rgba(255,255,255,0.1); box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);}
-        .ai-input-group button { background: var(--ai-gradient); color: white; border: none; padding: 0 32px; border-radius: 16px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s;}
+        .ai-input-group button { background: var(--ai-gradient); color: white; border: none; padding: 0 32px; border-radius: 16px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s; white-space: nowrap;}
         .ai-input-group button:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(139, 92, 246, 0.4);}
         
         .ai-tags { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; position: relative; z-index: 1;}
@@ -100,6 +103,7 @@
 
         .ai-result-container { max-width: 700px; margin: 0 auto; background: rgba(0,0,0,0.3); border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); padding: 30px; position: relative; z-index: 1; display: none;}
         .ai-result-container.active { display: block; animation: fadeIn 0.5s ease;}
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
         
         .ai-loading { text-align: center; color: #9ca3af; display: none;}
         .ai-loading.active { display: block;}
@@ -148,7 +152,6 @@
         .skill-nav-btn.active { background: var(--accent-color); color: white; border-color: var(--accent-color); box-shadow: var(--glow);}
 
         /* ================= 工作经历 (评论区式折叠) ================= */
-        .timeline-group { margin-bottom: 80px; }
         .comment-list { display: flex; flex-direction: column; gap: 16px; }
         .comment-item {
             background: var(--card-bg); border-radius: 16px; border: 1px solid rgba(0,0,0,0.04);
@@ -163,10 +166,10 @@
         }
         .comment-header:hover { background: rgba(0,0,0,0.01); }
         .comment-info { display: flex; align-items: center; gap: 16px; }
-        .comment-avatar { width: 48px; height: 48px; background: var(--accent-light); border-radius: 12px; display: flex; justify-content: center; align-items: center; font-weight: 800; color: var(--accent-color); font-size: 1.2rem;}
+        .comment-avatar { width: 48px; height: 48px; background: var(--accent-light); border-radius: 12px; display: flex; justify-content: center; align-items: center; font-weight: 800; color: var(--accent-color); font-size: 1.2rem; flex-shrink: 0;}
         .comment-meta h4 { font-size: 1.1rem; color: #111827; margin-bottom: 4px;}
         .comment-meta p { font-size: 0.85rem; color: var(--text-sub);}
-        .comment-toggle { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: var(--accent-color); font-weight: 600;}
+        .comment-toggle { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: var(--accent-color); font-weight: 600; white-space: nowrap;}
         .comment-toggle svg { transition: transform 0.3s ease; }
         .comment-item.active .comment-toggle svg { transform: rotate(180deg); }
 
@@ -195,9 +198,9 @@
         .comp-tag.award { background: var(--accent-light); color: var(--accent-color);}
         .comp-card h3 { font-size: 1.25rem; color: #111827; margin-bottom: 8px; font-weight: 700; line-height: 1.4;}
         .comp-card p { font-size: 0.9rem; color: var(--text-sub); margin-bottom: 20px; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;}
-        .comp-footer { margin-top: auto; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f3f4f6; padding-top: 16px;}
+        .comp-footer { margin-top: auto; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f3f4f6; padding-top: 16px; gap: 8px;}
         .comp-date { font-size: 0.85rem; color: #9ca3af; font-weight: 500;}
-        .comp-link { font-size: 0.85rem; color: var(--accent-color); font-weight: 600; display: flex; align-items: center; gap: 4px;}
+        .comp-link { font-size: 0.85rem; color: var(--accent-color); font-weight: 600; display: flex; align-items: center; gap: 4px; white-space: nowrap;}
 
         /* ================= 弹窗通用样式 ================= */
         .modal-overlay {
@@ -225,8 +228,8 @@
 
         /* 联系方式特定样式 */
         .contact-info-list { list-style: none; padding: 0; margin: 20px 0;}
-        .contact-info-list li { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; font-size: 1.1rem; font-weight: 500; color: #111827; background: #f9fafb; padding: 15px 20px; border-radius: 12px;}
-        .contact-info-list li svg { width: 24px; height: 24px; color: var(--accent-color); }
+        .contact-info-list li { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; font-size: 1.1rem; font-weight: 500; color: #111827; background: #f9fafb; padding: 15px 20px; border-radius: 12px; justify-content: center;}
+        .contact-info-list li svg { width: 24px; height: 24px; color: var(--accent-color); flex-shrink: 0;}
         
         /* 其他获奖时间线特定样式 */
         .other-timeline { position: relative; padding-left: 20px; margin-top: 20px;}
@@ -236,31 +239,19 @@
         .other-date { font-size: 0.85rem; font-weight: 700; color: var(--accent-color); margin-bottom: 4px;}
         .other-title { font-size: 0.95rem; color: #374151; font-weight: 500;}
 
+        /* 简历下载弹窗按钮 */
+        .resume-option {
+            display: flex; align-items: center; justify-content: space-between; gap: 12px;
+            width: 100%; padding: 18px 22px; border-radius: 16px; cursor: pointer;
+            border: 1px solid #e5e7eb; background: #fff; transition: all 0.25s; text-align: left;
+        }
+        .resume-option:hover { border-color: var(--accent-color); background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(139,92,246,0.12); }
+        .resume-option .ro-name { font-size: 1rem; font-weight: 700; color: #111827; }
+        .resume-option .ro-file { font-size: 0.78rem; color: var(--text-sub); margin-top: 2px; }
+        .resume-option .ro-flag { font-size: 1.5rem; }
+
         /* ================= 页脚 ================= */
         .footer { text-align: center; padding: 60px 20px; color: var(--text-sub); border-top: 1px solid rgba(0,0,0,0.05); margin-top: 60px; background: rgba(255,255,255,0.3);}
-
-        /* ================= 悬浮 AI 助手气泡 ================= */
-        #ai-assistant-wrapper {
-            position: fixed; bottom: 30px; right: 30px; z-index: 9999;
-            display: flex; align-items: center; justify-content: flex-end;
-        }
-        .ai-bubble {
-            background: var(--ai-gradient); color: white;
-            padding: 12px 24px; border-radius: 30px; font-weight: bold; font-size: 1rem;
-            display: flex; align-items: center; gap: 10px; cursor: pointer;
-            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            animation: floatBubble 3s ease-in-out infinite;
-        }
-        .ai-bubble:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 35px rgba(139, 92, 246, 0.6); }
-        @keyframes floatBubble { 0% { transform: translateY(0); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0); } }
-
-        #ai-chat-window {
-            position: fixed; bottom: 100px; right: 30px; width: 380px; height: 520px; 
-            background: white; border-radius: 20px; box-shadow: 0 15px 50px rgba(0,0,0,0.15); 
-            z-index: 9998; display: none; flex-direction: column; overflow: hidden; border: 1px solid #e5e7eb;
-            transform-origin: bottom right; transition: all 0.3s;
-        }
 
         /* ================= 响应式 ================= */
         @media (max-width: 1024px) {
@@ -277,7 +268,14 @@
             .comp-grid { grid-template-columns: 1fr; }
             .ai-input-group { flex-direction: column; }
             .ai-input-group button { padding: 16px; }
-            #ai-chat-window { width: 90%; right: 5%; bottom: 90px; height: 70vh; }
+            .modal-content { padding: 30px 24px; }
+            .edu-info { padding: 28px; }
+        }
+        @media (max-width: 480px) {
+            .navbar { padding: 0 14px; }
+            .nav-btn { padding: 9px 14px; font-size: 0.78rem; }
+            .lang-btn { padding: 8px 11px; font-size: 0.78rem; min-width: 46px; }
+            .hero-text h1 { font-size: 2.4rem; }
         }
     </style>
 </head>
@@ -292,38 +290,37 @@
     <nav class="navbar">
         <div class="logo">
             <img src="avatar.jpg" alt="Logo">
-            栗丽婧
+            <span data-i18n="nav.name">栗丽婧</span>
         </div>
         <ul class="nav-links">
-            <li><a href="#about">关于我</a></li>
-            <li><a href="#ai-matcher">AI 匹配</a></li>
-            <li><a href="#education">教育背景</a></li>
-            <li><a href="#skills">技能档案</a></li>
-            <li><a href="#work-experience">工作经历</a></li>
-            <li><a href="#competitions">竞赛创业</a></li>
+            <li><a href="#about" data-i18n="nav.about">关于我</a></li>
+            <li><a href="#ai-matcher" data-i18n="nav.ai">AI 匹配</a></li>
+            <li><a href="#education" data-i18n="nav.edu">教育背景</a></li>
+            <li><a href="#skills" data-i18n="nav.skills">技能档案</a></li>
+            <li><a href="#work-experience" data-i18n="nav.work">工作经历</a></li>
+            <li><a href="#competitions" data-i18n="nav.comp">竞赛创业</a></li>
         </ul>
-        <button class="nav-btn" onclick="downloadResume()">简历.pdf ↗</button>
+        <div class="nav-actions">
+            <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
+            <button class="nav-btn" onclick="openResumeModal()"><span data-i18n="nav.resume">简历.pdf</span> ↗</button>
+        </div>
     </nav>
 
     <!-- 首屏 Hero -->
     <header class="hero" id="about">
         <div class="hero-text">
-            <div class="tag-hello">● HELLO / 你好</div>
-            <h1>Hi,<br>我是<span>栗丽婧</span></h1>
-            <h2>Business Analyst / 商业分析</h2>
-            <!-- 引导文案 -->
-            <div class="ai-hint">
-                <span></span> 点击右下角，与我的 AI 数字分身对话了解更多
-            </div>
+            <div class="tag-hello" data-i18n="hero.hello">● HELLO / 你好</div>
+            <h1 data-i18n-html="hero.h1">Hi,<br>我是<span>栗丽婧</span></h1>
+            <h2 data-i18n="hero.h2">Business Analyst / 商业分析</h2>
             <div class="hero-actions">
-                <button class="btn-primary" onclick="downloadResume()">
+                <button class="btn-primary" onclick="openResumeModal()">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                    下载简历
+                    <span data-i18n="hero.download">下载简历</span>
                 </button>
-                <button class="btn-secondary" onclick="openContactModal()">联系我</button>
+                <button class="btn-secondary" onclick="openContactModal()" data-i18n="hero.contact">联系我</button>
             </div>
             <div class="skills-preview">
-                <span class="skill-pill">Excel 高级处理</span>
+                <span class="skill-pill">Excel</span>
                 <span class="skill-pill">SQL</span>
                 <span class="skill-pill">Python</span>
                 <span class="skill-pill">STATA</span>
@@ -336,17 +333,17 @@
         </div>
     </header>
 
-    <!-- AI 岗位匹配区 -->
+    <!-- ================= AI 岗位匹配区 ================= -->
     <div class="section-container" id="ai-matcher">
         <div class="ai-matcher-section">
             <div class="ai-header">
-                <h2>✨ AI 智能岗位匹配</h2>
-                <p>输入目标岗位，AI 将结合栗丽婧的详实经历进行深度适配分析。</p>
+                <h2 data-i18n="ai.title">✨ AI 智能岗位匹配</h2>
+                <p data-i18n="ai.desc">输入您的目标岗位，AI 将根据栗丽婧的简历进行深度适配分析。</p>
             </div>
             
             <div class="ai-input-group">
-                <input type="text" id="jobInput" placeholder="例如：数据分析师、产品运营..." onkeypress="handleKeyPress(event)">
-                <button onclick="startAIMatching()">开始匹配</button>
+                <input type="text" id="jobInput" data-i18n-placeholder="ai.placeholder" placeholder="例如：数据分析师、商业分析师、产品运营..." onkeypress="handleKeyPress(event)">
+                <button onclick="startAIMatching()" data-i18n="ai.btn">开始匹配</button>
             </div>
             
             <div class="ai-tags">
@@ -356,26 +353,31 @@
                 <span class="ai-tag" onclick="quickMatch('金融风控')">金融风控</span>
             </div>
 
+            <!-- 加载动画 -->
             <div class="ai-loading" id="aiLoading">
                 <div class="spinner"></div>
-                <p>大模型正在深度解析简历数据...</p>
+                <p data-i18n="ai.loading">大模型正在深度解析简历数据与岗位需求...</p>
             </div>
 
+            <!-- 匹配结果 -->
             <div class="ai-result-container" id="aiResult">
-                <div class="match-score" id="matchScore">--%</div>
-                <div class="match-title" id="matchTitle">等待分析</div>
+                <div class="match-score" id="matchScore">95%</div>
+                <div class="match-title" id="matchTitle">极高匹配度！</div>
+                
                 <div class="match-details">
-                    <h4>核心匹配技能</h4>
+                    <h4 data-i18n="ai.skillsLabel">核心匹配技能</h4>
                     <div class="match-skills" id="matchSkills"></div>
                 </div>
+                
                 <div class="match-details">
-                    <h4>AI 简历洞察</h4>
+                    <h4 data-i18n="ai.expLabel">AI 简历洞察</h4>
                     <div class="match-experience" id="matchExp"></div>
                 </div>
             </div>
 
+            <!-- 技术说明 -->
             <div class="ai-tech-credit">
-                底层 AI 算法驱动：<span>智谱 GLM-4-Flash</span> &nbsp;|&nbsp; Vercel Serverless
+                <span data-i18n="ai.credit">底层 AI 算法驱动：OpenAI GPT-4o &nbsp;|&nbsp; 核心解析：大语言模型简历语义理解与岗位特征向量匹配</span>
             </div>
         </div>
     </div>
@@ -384,25 +386,25 @@
     <div class="section-container" id="education">
         <div class="section-header">
             <div class="section-subtitle">01 / EDUCATION</div>
-            <h2 class="section-title">教育背景</h2>
+            <h2 class="section-title" data-i18n="edu.title">教育背景</h2>
         </div>
         <div class="edu-grid">
             <div class="edu-card">
                 <div class="edu-img"><img src="university2.jpg" alt="香港理工大学"></div>
                 <div class="edu-info">
-                    <div class="edu-date">2026.09 — 至今</div>
-                    <div class="edu-school">香港理工大学</div>
-                    <div class="edu-major">硕士 / 数字经济学 (QS 50)</div>
-                    <div class="edu-desc">系统学习中级宏观经济学、金融学、Python编程、AI概念、数据结构与数据库系统等核心课程。致力于将传统经济学分析框架与现代数据科学工具相结合。</div>
+                    <div class="edu-date">2026.09 — <span data-i18n="edu.present">至今</span></div>
+                    <div class="edu-school" data-i18n="edu.p1.school">香港理工大学</div>
+                    <div class="edu-major" data-i18n="edu.p1.major">硕士 / 数字经济学 (QS 50)</div>
+                    <div class="edu-desc" data-i18n="edu.p1.desc">开启研究生阶段学习，主修中级宏观经济、金融学、Python、AI概念及数据结构等课程。致力于将经济学理论与前沿数据科学相结合。</div>
                 </div>
             </div>
             <div class="edu-card">
                 <div class="edu-img"><img src="university1.jpg" alt="合肥工业大学"></div>
                 <div class="edu-info">
                     <div class="edu-date">2020.09 — 2024.07</div>
-                    <div class="edu-school">合肥工业大学</div>
-                    <div class="edu-major">本科 / 经济学 (双一流/211)</div>
-                    <div class="edu-desc">GPA 87.65/100。构建扎实的经济学理论体系，系统掌握SPSS、STATA等计量建模工具。主动选修C语言、Python、Matlab等课程，具备基础编程逻辑。</div>
+                    <div class="edu-school" data-i18n="edu.p2.school">合肥工业大学</div>
+                    <div class="edu-major" data-i18n="edu.p2.major">本科 / 经济学 (双一流/211)</div>
+                    <div class="edu-desc" data-i18n="edu.p2.desc">GPA 87.65/100。系统学习经济学理论，熟练掌握SPSS、STATA等分析工具，荣获学习进步奖、三等奖学金，并在各类创新创业竞赛中屡获省级、校级殊荣。</div>
                 </div>
             </div>
         </div>
@@ -412,249 +414,37 @@
     <div class="section-container" id="skills">
         <div class="section-header">
             <div class="section-subtitle">02 / SKILLS & EXPERIENCE</div>
-            <h2 class="section-title">技能与实战档案</h2>
-            <p style="color: var(--text-sub); margin-top: 10px;">点击下方标签，查看对应技能的真实应用场景。</p>
+            <h2 class="section-title" data-i18n="skills.title">技能与实战档案</h2>
+            <p style="color: var(--text-sub); margin-top: 10px;" data-i18n="skills.desc">点击下方标签，查看对应技能的真实应用场景。</p>
         </div>
         <div class="skills-wrapper">
             <div class="skill-display-main" id="skillDisplay">
                 <span class="file-tag" id="skillTag">FILE 01 / EXCEL</span>
                 <h3 id="skillTitle">Excel 高级处理</h3>
-                <div id="skillContent">
-                    <ul>
-                        <li><b>华发集团：</b>处理海量业主意见问卷，通过 VLOOKUP 进行多表关联，编写复杂嵌套公式（IF、SUMIFS）进行逻辑校验。</li>
-                        <li><b>禾和时尚：</b>搭建多维度业务动态看板，将数据拆解为区域、品牌、品类三级维度。</li>
-                        <li><b>中铁十五局：</b>建立50+类材料台账，运用数据透视表进行时间序列的趋势分析与库存排查。</li>
-                    </ul>
-                </div>
+                <div id="skillContent"></div>
             </div>
-            <div class="skill-tags-container">
-                <button class="skill-nav-btn active" onclick="switchSkill('excel', this)">Excel 高级处理</button>
-                <button class="skill-nav-btn" onclick="switchSkill('sql', this)">SQL 数据提取</button>
-                <button class="skill-nav-btn" onclick="switchSkill('python', this)">Python (Pandas)</button>
-                <button class="skill-nav-btn" onclick="switchSkill('stata', this)">STATA 计量建模</button>
-                <button class="skill-nav-btn" onclick="switchSkill('spss', this)">SPSS 统计检验</button>
-            </div>
+            <div class="skill-tags-container" id="skillTagsContainer"></div>
         </div>
     </div>
 
-    <!-- 工作经历 (折叠) -->
+    <!-- 工作经历 (评论区式手风琴) -->
     <div class="section-container" id="work-experience">
         <div class="section-header">
             <div class="section-subtitle">03 / WORK EXPERIENCE</div>
-            <h2 class="section-title">工作经历</h2>
-            <p style="color: var(--text-sub); margin-top: 10px;">点击卡片展开详细信息与实习证明。</p>
+            <h2 class="section-title" data-i18n="work.title">工作经历</h2>
+            <p style="color: var(--text-sub); margin-top: 10px;" data-i18n="work.desc">点击卡片展开详细信息与实习证明。</p>
         </div>
-        <div class="comment-list">
-            <!-- 华发集团 -->
-            <div class="comment-item">
-                <div class="comment-header" onclick="toggleComment(this)">
-                    <div class="comment-info">
-                        <div class="comment-avatar">华</div>
-                        <div class="comment-meta">
-                            <h4>华发集团</h4>
-                            <p>项目运营专员 | 2025.11 - 2026.07</p>
-                        </div>
-                    </div>
-                    <div class="comment-toggle">
-                        <span>展开</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                    </div>
-                </div>
-                <div class="comment-body">
-                    <div class="comment-content-inner">
-                        <h4>核心动作与挑战</h4>
-                        <ul>
-                            <li><b>海量数据清洗：</b>独立负责业主满意度调研数据，运用高级函数进行多表关联与逻辑校验，剔除无效样本，确保底层数据精准。</li>
-                            <li><b>动态看板搭建：</b>摒弃静态报表，独立搭建可按时间、楼栋、问题分类进行多维度切片分析的动态实时面板。</li>
-                            <li><b>业务赋能：</b>通过看板暴露出的痛点，输出量化分析报告，直接为运营团队制定催缴策略和品质提升方案提供数据支撑。</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <!-- 禾和时尚 -->
-            <div class="comment-item">
-                <div class="comment-header" onclick="toggleComment(this)">
-                    <div class="comment-info">
-                        <div class="comment-avatar">禾</div>
-                        <div class="comment-meta">
-                            <h4>山西禾和时尚科技有限公司</h4>
-                            <p>商业分析助理 | 2025.01 - 2025.08</p>
-                        </div>
-                    </div>
-                    <div class="comment-toggle">
-                        <span>展开</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                    </div>
-                </div>
-                <div class="comment-body">
-                    <div class="comment-content-inner">
-                        <h4>核心动作与挑战</h4>
-                        <ul>
-                            <li><b>SQL 驱动取数：</b>直接对接业务数据库，运用 Join、Group by 等语句提取门店与销售流水记录，并进行严苛的异常值处理。</li>
-                            <li><b>多维度动态看板：</b>拆解区域、品牌、品类维度，敏锐定位出特定门店在特定时间段的异常销售波动。</li>
-                            <li><b>竞品分析：</b>收集同商圈竞品定价与促销数据，撰写深度报告，为货品调配与促销策略提供精准参考。</li>
-                        </ul>
-                        <h4>实习证明</h4>
-                        <img src="InternshipCertificate1.jpg" alt="禾和时尚实习证明" class="cert-img">
-                    </div>
-                </div>
-            </div>
-            <!-- 中铁十五局 -->
-            <div class="comment-item">
-                <div class="comment-header" onclick="toggleComment(this)">
-                    <div class="comment-info">
-                        <div class="comment-avatar">铁</div>
-                        <div class="comment-meta">
-                            <h4>中铁十五局集团有限公司</h4>
-                            <p>数据实习生 | 2024.09 - 2024.12</p>
-                        </div>
-                    </div>
-                    <div class="comment-toggle">
-                        <span>展开</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                    </div>
-                </div>
-                <div class="comment-body">
-                    <div class="comment-content-inner">
-                        <h4>核心动作与挑战</h4>
-                        <ul>
-                            <li><b>台账建设：</b>维护覆盖50+类建筑材料的数字化台账，保障底层数据准确无误。</li>
-                            <li><b>趋势分析：</b>运用数据透视表进行时间序列分析，成功排查出部分材料库存周转偏慢的异常情况。</li>
-                            <li><b>跨部门协同：</b>输出数据简报，提醒项目部优化采购计划，避免资金占用，推动供应链流程优化。</li>
-                        </ul>
-                        <h4>实习证明</h4>
-                        <img src="InternshipCertificate2.jpg" alt="中铁实习证明" class="cert-img">
-                    </div>
-                </div>
-            </div>
-            <!-- 代县农信社 -->
-            <div class="comment-item">
-                <div class="comment-header" onclick="toggleComment(this)">
-                    <div class="comment-info">
-                        <div class="comment-avatar">信</div>
-                        <div class="comment-meta">
-                            <h4>代县农村信用合作联社</h4>
-                            <p>风险管理实习生 | 2024.01 - 2024.02</p>
-                        </div>
-                    </div>
-                    <div class="comment-toggle">
-                        <span>展开</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                    </div>
-                </div>
-                <div class="comment-body">
-                    <div class="comment-content-inner">
-                        <h4>核心动作与挑战</h4>
-                        <ul>
-                            <li><b>数据清洗与分类：</b>对逾期客户数据进行深度清洗，按逾期天数、欠款金额等多维度进行分类。</li>
-                            <li><b>特征提取：</b>提取关键风险特征，协助部门搭建不良资产价值评估模型。</li>
-                            <li><b>模型评估：</b>利用基础数据分析辅助评估坏账风险，为季度风险排查与催收策略提供量化依据。</li>
-                        </ul>
-                        <h4>实习证明</h4>
-                        <img src="InternshipCertificate3.jpg" alt="代县农信社实习证明" class="cert-img">
-                    </div>
-                </div>
-            </div>
-            <!-- 锦泽工程 -->
-            <div class="comment-item">
-                <div class="comment-header" onclick="toggleComment(this)">
-                    <div class="comment-info">
-                        <div class="comment-avatar">锦</div>
-                        <div class="comment-meta">
-                            <h4>山西锦泽工程科技有限公司</h4>
-                            <p>管理顾问 | 2022.12 - 2023.01</p>
-                        </div>
-                    </div>
-                    <div class="comment-toggle">
-                        <span>展开</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                    </div>
-                </div>
-                <div class="comment-body">
-                    <div class="comment-content-inner">
-                        <h4>核心动作与挑战</h4>
-                        <ul>
-                            <li>深入研究行业动态，识别企业的战略目标，参与制定组织策略与行动计划。</li>
-                            <li>通过梳理业务流程，提出优化企业结构和提升运营效率的建议。</li>
-                            <li>协助企业设计并落地管理系统、运营系统与生产系统。</li>
-                        </ul>
-                        <h4>实习证明</h4>
-                        <img src="InternshipCertificate4.jpg" alt="锦泽实习证明" class="cert-img">
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div class="comment-list" id="workList"></div>
     </div>
 
-    <!-- 竞赛与创业 -->
+    <!-- 竞赛与创业 (卡片网格) -->
     <div class="section-container" id="competitions">
         <div class="section-header">
             <div class="section-subtitle">04 / COMPETITIONS & STARTUPS</div>
-            <h2 class="section-title">竞赛与创业项目</h2>
-            <p style="color: var(--text-sub); margin-top: 10px;">学术科研与商业实践的深度结合。</p>
+            <h2 class="section-title" data-i18n="comp.title">竞赛与创业项目</h2>
+            <p style="color: var(--text-sub); margin-top: 10px;" data-i18n="comp.desc">学术科研与商业实践的深度结合。</p>
         </div>
-        <div class="comp-grid">
-            <!-- 1. 创业 -->
-            <div class="comp-card" onclick="openCompModal('flower')">
-                <span class="comp-tag">创业项目</span>
-                <h3>“pass the romantic”鲜花全链条供应</h3>
-                <p>敏锐捕捉校园鲜花市场痛点，独立创立专属鲜花品牌，全渠道运营，实现极高的回购率。</p>
-                <div class="comp-footer">
-                    <span class="comp-date">2023.03 - 2023.09</span>
-                    <span class="comp-link">查看详情 →</span>
-                </div>
-            </div>
-            <!-- 2. iCAN -->
-            <div class="comp-card" onclick="openCompModal('ican')">
-                <span class="comp-tag award">省级一等奖</span>
-                <h3>第十六届 iCAN 创新创业大赛</h3>
-                <p>参赛作品：“Sober”——疲劳驾驶检测系统。负责市场分析、商业模式构建与财务预测。</p>
-                <div class="comp-footer">
-                    <span class="comp-date">2022.09</span>
-                    <span class="comp-link">查看详情 →</span>
-                </div>
-            </div>
-            <!-- 3. 服务外包 -->
-            <div class="comp-card" onclick="openCompModal('outsourcing')">
-                <span class="comp-tag award">省级三等奖</span>
-                <h3>安徽省大学生服务外包创新创业大赛</h3>
-                <p>基于Sober项目的商业化落地方案，重点探讨转化为B2B可外包、可大规模部署的服务。</p>
-                <div class="comp-footer">
-                    <span class="comp-date">2022.12</span>
-                    <span class="comp-link">查看详情 →</span>
-                </div>
-            </div>
-            <!-- 4. 三下乡 -->
-            <div class="comp-card" onclick="openCompModal('sanxia')">
-                <span class="comp-tag award">省级立项 / 副队长</span>
-                <h3>“探析宣州产业集群”三下乡实践</h3>
-                <p>作为副队长，主导政企对接与实地调研，为后续的学术报告收集一手经营数据。</p>
-                <div class="comp-footer">
-                    <span class="comp-date">2022.07</span>
-                    <span class="comp-link">查看详情 →</span>
-                </div>
-            </div>
-            <!-- 5. 挑战杯 -->
-            <div class="comp-card" onclick="openCompModal('challenge')">
-                <span class="comp-tag award">校级二等奖</span>
-                <h3>“挑战杯”课外学术科技作品竞赛</h3>
-                <p>基于三下乡调研数据，运用 SPSS 进行定性与定量分析，构建评价指标体系。</p>
-                <div class="comp-footer">
-                    <span class="comp-date">2023.05</span>
-                    <span class="comp-link">查看详情 →</span>
-                </div>
-            </div>
-            <!-- 6. 其他获奖 -->
-            <div class="comp-card" onclick="openOtherModal()">
-                <span class="comp-tag">综合荣誉</span>
-                <h3>其他获奖经历</h3>
-                <p>涵盖奖学金、优秀共青团员、各类校级学科竞赛及优秀实践团队等综合荣誉。</p>
-                <div class="comp-footer">
-                    <span class="comp-date">2021 - 2023</span>
-                    <span class="comp-link">查看时间线 →</span>
-                </div>
-            </div>
-        </div>
+        <div class="comp-grid" id="compGrid"></div>
     </div>
 
     <!-- 竞赛详情弹窗 -->
@@ -671,8 +461,8 @@
     <div class="modal-overlay" id="contactModal" onclick="closeModal(event)">
         <div class="modal-content" style="max-width: 500px; text-align: center;" onclick="event.stopPropagation()">
             <span class="close-btn" onclick="closeModal(event)">&times;</span>
-            <h2 class="modal-title" style="margin-top: 10px;">联系方式</h2>
-            <p style="color: var(--text-sub); margin-bottom: 30px;">期待与您的交流与合作！</p>
+            <h2 class="modal-title" style="margin-top: 10px;" data-i18n="contact.title">联系方式</h2>
+            <p style="color: var(--text-sub); margin-bottom: 30px;" data-i18n="contact.desc">期待与您的交流与合作！</p>
             
             <ul class="contact-info-list">
                 <li>
@@ -684,7 +474,7 @@
                     <a href="tel:15702797985">15702797985</a>
                 </li>
             </ul>
-            <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="closeModal(event)">关闭</button>
+            <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="closeModal(event)" data-i18n="contact.close">关闭</button>
         </div>
     </div>
 
@@ -692,452 +482,1018 @@
     <div class="modal-overlay" id="otherModal" onclick="closeModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <span class="close-btn" onclick="closeModal(event)">&times;</span>
-            <h2 class="modal-title">其他获奖经历</h2>
-            <div class="modal-subtitle">综合荣誉与学科竞赛</div>
-            <div class="other-timeline">
-                <div class="other-item">
-                    <div class="other-date">2023.12</div>
-                    <div class="other-title">合肥工业大学三等奖学金</div>
-                </div>
-                <div class="other-item">
-                    <div class="other-date">2022.12</div>
-                    <div class="other-title">合肥工业大学学习进步奖</div>
-                </div>
-                <div class="other-item">
-                    <div class="other-date">2022.07</div>
-                    <div class="other-title">合肥工业大学暑期“三下乡”优秀实践调研报告一等奖、优秀实践图片二等奖等多项荣誉</div>
-                </div>
-                <div class="other-item">
-                    <div class="other-date">2022.04</div>
-                    <div class="other-title">第五届合肥工业大学市场调查与分析大赛 三等奖</div>
-                </div>
-                <div class="other-item">
-                    <div class="other-date">2021.11</div>
-                    <div class="other-title">第七届合肥工业大学宣城校区企业竞争模拟大赛 三等奖</div>
-                </div>
-                <div class="other-item">
-                    <div class="other-date">2021.07</div>
-                    <div class="other-title">第七届安徽省“互联网+”大学生创新创业大赛 初创组铜奖</div>
-                </div>
-                <div class="other-item">
-                    <div class="other-date">2021.05</div>
-                    <div class="other-title">第六届全国学术英语词汇竞赛 三等奖</div>
-                </div>
-                <div class="other-item">
-                    <div class="other-date">2021.03</div>
-                    <div class="other-title">第六届合肥工业大学商业计划书大赛 二等奖</div>
-                </div>
+            <h2 class="modal-title" data-i18n="other.title">其他获奖经历</h2>
+            <div class="modal-subtitle" data-i18n="other.subtitle">综合荣誉与学科竞赛</div>
+            <div class="other-timeline" id="otherTimeline"></div>
+        </div>
+    </div>
+
+    <!-- 简历下载弹窗 -->
+    <div class="modal-overlay" id="resumeModal" onclick="closeModal(event)">
+        <div class="modal-content" style="max-width: 480px; text-align: center;" onclick="event.stopPropagation()">
+            <span class="close-btn" onclick="closeModal(event)">&times;</span>
+            <h2 class="modal-title" style="margin-top: 10px;" data-i18n="resume.title">下载简历</h2>
+            <p style="color: var(--text-sub); margin-bottom: 26px;" data-i18n="resume.desc">请选择您需要的简历语言版本。</p>
+
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+                <button class="resume-option" onclick="openResume('zh')">
+                    <div>
+                        <div class="ro-name">中文简历 / Chinese</div>
+                        <div class="ro-file">resume-zh.pdf</div>
+                    </div>
+                    <span class="ro-flag">🇨🇳</span>
+                </button>
+                <button class="resume-option" onclick="openResume('en')">
+                    <div>
+                        <div class="ro-name">English Resume / 英文简历</div>
+                        <div class="ro-file">resume-en.pdf</div>
+                    </div>
+                    <span class="ro-flag">🇬🇧</span>
+                </button>
             </div>
         </div>
     </div>
 
     <!-- 页脚 -->
     <footer class="footer">
-        <p>© 2026 栗丽婧 Lijing Li | 数据驱动未来</p>
+        <p data-i18n="footer.line1">© 2026 栗丽婧 Lijing Li | 数据驱动未来</p>
         <p>📧 LiLijing0128@163.com | 📞 15702797985</p>
     </footer>
 
-    <!-- ================= 悬浮 AI 助手组件 开始 ================= -->
-    <div id="ai-assistant-wrapper" onclick="toggleAiChat()">
-        <div class="ai-bubble">
-            ✨ 对话 AI 助理
-        </div>
-    </div>
-
-    <div id="ai-chat-window">
-        <!-- 头部 -->
-        <div style="background: linear-gradient(135deg, #8b5cf6, #3b82f6); color: white; padding: 15px 20px; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
-            <span>✨ 栗丽婧的 AI 助理</span>
-            <span onclick="toggleAiChat()" style="cursor: pointer; font-size: 1.2rem;">&times;</span>
-        </div>
-        <!-- 消息区 -->
-        <div id="ai-chat-messages" style="flex: 1; padding: 20px; overflow-y: auto; background: #f9fafb; display: flex; flex-direction: column; gap: 15px; font-size: 0.9rem;">
-            <div style="background: white; padding: 10px 15px; border-radius: 12px; border-bottom-left-radius: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); max-width: 85%; line-height: 1.5;">
-                您好！我是栗丽婧的 AI 助理，已深度学习了她的详细履历。您可以问我关于她的<b>实习经历、项目细节、技能掌握程度</b>等问题。
-            </div>
-            <!-- 快捷问题 -->
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <span onclick="askPreset('她在华发集团具体做了什么？')" style="background: #e0e7ff; color: #4f46e5; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; cursor: pointer;">华发集团做了什么？</span>
-                <span onclick="askPreset('Sober项目中她负责什么？')" style="background: #e0e7ff; color: #4f46e5; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; cursor: pointer;">Sober项目负责什么？</span>
-                <span onclick="askPreset('她的数据分析能力如何？')" style="background: #e0e7ff; color: #4f46e5; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; cursor: pointer;">数据分析能力如何？</span>
-            </div>
-        </div>
-        <!-- 输入区 -->
-        <div style="padding: 15px; border-top: 1px solid #e5e7eb; display: flex; gap: 10px; background: white;">
-            <input type="text" id="ai-chat-input" placeholder="输入您的问题..." style="flex: 1; padding: 10px; border: 1px solid #d1d5db; border-radius: 20px; outline: none;" onkeypress="if(event.key==='Enter') sendAiMessage()">
-            <button onclick="sendAiMessage()" style="background: #8b5cf6; color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center;">↑</button>
-        </div>
-    </div>
-    <!-- ================= 悬浮 AI 助手组件 结束 ================= -->
-
     <script>
-        // ⚠️⚠️⚠️ 唯一的配置项 ⚠️⚠️⚠️
-        // 请将下面的 URL 替换为您刚才在 Vercel 上生成的真实后端域名！
-        const API_BASE_URL = 'https://lilijing030128githubio.vercel.app'; 
+    /* ============================================================
+       一、静态文案翻译表
+    ============================================================ */
+    const I18N = {
+        zh: {
+            'meta.title': '栗丽婧 | 数据探索者 & 商业分析',
+            'nav.name': '栗丽婧',
+            'nav.about': '关于我',
+            'nav.ai': 'AI 匹配',
+            'nav.edu': '教育背景',
+            'nav.skills': '技能档案',
+            'nav.work': '工作经历',
+            'nav.comp': '竞赛创业',
+            'nav.resume': '简历.pdf',
 
-        // ================= 1. 简历下载与联系我逻辑 =================
-        function downloadResume() {
-            window.location.href = 'resume.pdf'; 
+            'hero.hello': '● HELLO / 你好',
+            'hero.h1': 'Hi,<br>我是<span>栗丽婧</span>',
+            'hero.h2': 'Business Analyst / 商业分析',
+            'hero.download': '下载简历',
+            'hero.contact': '联系我',
+
+            'ai.title': '✨ AI 智能岗位匹配',
+            'ai.desc': '输入您的目标岗位，AI 将根据栗丽婧的简历进行深度适配分析。',
+            'ai.placeholder': '例如：数据分析师、商业分析师、产品运营...',
+            'ai.btn': '开始匹配',
+            'ai.loading': '大模型正在深度解析简历数据与岗位需求...',
+            'ai.skillsLabel': '核心匹配技能',
+            'ai.expLabel': 'AI 简历洞察',
+            'ai.credit': '底层 AI 算法驱动：OpenAI GPT-4o &nbsp;|&nbsp; 核心解析：大语言模型简历语义理解与岗位特征向量匹配',
+            'ai.empty': '请输入您想要匹配的岗位名称！',
+            'ai.tag1': '数据分析师',
+            'ai.tag2': '商业分析师',
+            'ai.tag3': '产品运营',
+            'ai.tag4': '金融风控',
+
+            'edu.title': '教育背景',
+            'edu.present': '至今',
+            'edu.p1.school': '香港理工大学',
+            'edu.p1.major': '硕士 / 数字经济学 (QS 50)',
+            'edu.p1.desc': '开启研究生阶段学习，主修中级宏观经济、金融学、Python、AI概念及数据结构等课程。致力于将经济学理论与前沿数据科学相结合。',
+            'edu.p2.school': '合肥工业大学',
+            'edu.p2.major': '本科 / 经济学 (双一流/211)',
+            'edu.p2.desc': 'GPA 87.65/100。系统学习经济学理论，熟练掌握SPSS、STATA等分析工具，荣获学习进步奖、三等奖学金，并在各类创新创业竞赛中屡获省级、校级殊荣。',
+
+            'skills.title': '技能与实战档案',
+            'skills.desc': '点击下方标签，查看对应技能的真实应用场景。',
+
+            'work.title': '工作经历',
+            'work.desc': '点击卡片展开详细信息与实习证明。',
+            'work.expand': '展开',
+            'work.collapse': '收起',
+            'work.coreDuties': '核心职责 & 数据动作',
+            'work.cert': '实习证明',
+
+            'comp.title': '竞赛与创业项目',
+            'comp.desc': '学术科研与商业实践的深度结合。',
+            'comp.viewDetails': '查看详情 →',
+            'comp.viewTimeline': '查看时间线 →',
+            'comp.tagOther': '综合荣誉',
+
+            'contact.title': '联系方式',
+            'contact.desc': '期待与您的交流与合作！',
+            'contact.close': '关闭',
+
+            'other.title': '其他获奖经历',
+            'other.subtitle': '综合荣誉与学科竞赛',
+
+            'resume.title': '下载简历',
+            'resume.desc': '请选择您需要的简历语言版本。',
+
+            'footer.line1': '© 2026 栗丽婧 Lijing Li | 数据驱动未来'
+        },
+
+        en: {
+            'meta.title': 'Lijing Li | Data Explorer & Business Analyst',
+            'nav.name': 'Lijing Li',
+            'nav.about': 'About',
+            'nav.ai': 'AI Match',
+            'nav.edu': 'Education',
+            'nav.skills': 'Skills',
+            'nav.work': 'Experience',
+            'nav.comp': 'Projects',
+            'nav.resume': 'Resume',
+
+            'hero.hello': '● HELLO / 你好',
+            'hero.h1': "Hi,<br>I'm <span>Lijing Li</span>",
+            'hero.h2': 'Business Analyst / Data Explorer',
+            'hero.download': 'Download CV',
+            'hero.contact': 'Contact Me',
+
+            'ai.title': '✨ AI Job Match',
+            'ai.desc': "Enter your target role and the AI will analyse Lijing's resume for a deep fit assessment.",
+            'ai.placeholder': 'e.g. Data Analyst, Business Analyst, Product Operations...',
+            'ai.btn': 'Match Now',
+            'ai.loading': 'The LLM is parsing the resume and job requirements...',
+            'ai.skillsLabel': 'Matching Skills',
+            'ai.expLabel': 'AI Resume Insight',
+            'ai.credit': 'Powered by: OpenAI GPT-4o &nbsp;|&nbsp; Resume semantic understanding & job feature vector matching',
+            'ai.empty': 'Please enter a job title to match!',
+            'ai.tag1': 'Data Analyst',
+            'ai.tag2': 'Business Analyst',
+            'ai.tag3': 'Product Ops',
+            'ai.tag4': 'Risk Control',
+
+            'edu.title': 'Education',
+            'edu.present': 'Present',
+            'edu.p1.school': 'The Hong Kong Polytechnic University',
+            'edu.p1.major': 'Master / Digital Economy (QS 50)',
+            'edu.p1.desc': 'Started postgraduate studies, majoring in Intermediate Macroeconomics, Finance, Python, AI Concepts and Data Structures. Dedicated to combining economic theory with cutting-edge data science.',
+            'edu.p2.school': 'Hefei University of Technology',
+            'edu.p2.major': 'Bachelor / Economics (Double First-Class / 211)',
+            'edu.p2.desc': 'GPA 87.65/100. Systematically studied economic theory and became proficient in SPSS, STATA and other analytical tools. Awarded the Academic Progress Award and Third-Class Scholarship, and won multiple provincial and university-level honours in innovation and entrepreneurship competitions.',
+
+            'skills.title': 'Skills & Practice Portfolio',
+            'skills.desc': 'Click a tag below to see real-world applications of each skill.',
+
+            'work.title': 'Work Experience',
+            'work.desc': 'Click a card to expand details and internship certificates.',
+            'work.expand': 'Expand',
+            'work.collapse': 'Collapse',
+            'work.coreDuties': 'Key Responsibilities & Data Actions',
+            'work.cert': 'Internship Certificate',
+
+            'comp.title': 'Competitions & Startups',
+            'comp.desc': 'Where academic research meets commercial practice.',
+            'comp.viewDetails': 'View Details →',
+            'comp.viewTimeline': 'View Timeline →',
+            'comp.tagOther': 'Honours',
+
+            'contact.title': 'Contact',
+            'contact.desc': 'Looking forward to connecting with you!',
+            'contact.close': 'Close',
+
+            'other.title': 'Other Awards',
+            'other.subtitle': 'Honours & Academic Competitions',
+
+            'resume.title': 'Download Resume',
+            'resume.desc': 'Please choose the language version you need.',
+
+            'footer.line1': '© 2026 Lijing Li | Data-Driven Future'
         }
+    };
 
-        function openContactModal() {
-            document.getElementById('contactModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        // ================= 2. 技能展示切换逻辑 =================
-        const skillsData = {
-            excel: {
-                title: "Excel 高级处理",
-                tag: "FILE 01 / EXCEL",
-                content: `<ul>
-                    <li><b>华发集团：</b>处理海量业主意见问卷，通过 VLOOKUP 进行多表关联，编写复杂嵌套公式（IF、SUMIFS）进行逻辑校验。</li>
-                    <li><b>禾和时尚：</b>搭建多维度业务动态看板，将数据拆解为区域、品牌、品类三级维度。</li>
-                    <li><b>中铁十五局：</b>建立50+类材料台账，运用数据透视表进行时间序列的趋势分析与库存排查。</li>
-                </ul>`
-            },
-            sql: {
-                title: "SQL 数据提取",
-                tag: "FILE 02 / SQL",
-                content: `<ul>
-                    <li><b>禾和时尚：</b>直接对接业务数据库，运用 Join、Group by 等语句提取门店与销售流水记录，并进行严苛的异常值处理。</li>
-                </ul>`
-            },
-            python: {
-                title: "Python (Pandas)",
-                tag: "FILE 03 / PYTHON",
-                content: `<ul>
-                    <li><b>“金银手指”二手平台：</b>掌握基础语法，能利用 Pandas 库进行自动化数据清洗、合并与月度交易分析。</li>
-                </ul>`
-            },
-            stata: {
-                title: "STATA 计量建模",
-                tag: "FILE 04 / STATA",
-                content: `<ul>
-                    <li><b>学术科研：</b>熟练掌握 Hausman 检验、固定效应模型回归分析等高级计量方法，具备深度的学术实证分析能力。</li>
-                </ul>`
-            },
-            spss: {
-                title: "SPSS 统计检验",
-                tag: "FILE 05 / SPSS",
-                content: `<ul>
-                    <li><b>三下乡调研：</b>将收集到的问卷数据与年鉴数据结合，运用 SPSS 进行定性与定量分析，构建评价指标体系。</li>
-                </ul>`
-            }
-        };
-
-        function switchSkill(key, btn) {
-            const data = skillsData[key];
-            document.getElementById('skillTag').innerText = data.tag;
-            document.getElementById('skillTitle').innerText = data.title;
-            const contentEl = document.getElementById('skillContent');
-            contentEl.style.opacity = 0;
-            setTimeout(() => {
-                contentEl.innerHTML = data.content;
-                contentEl.style.opacity = 1;
-            }, 150);
-            document.querySelectorAll('.skill-nav-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-        }
-
-        // ================= 3. 评论区式手风琴展开/收起 =================
-        function toggleComment(headerElement) {
-            const item = headerElement.parentElement;
-            const body = item.querySelector('.comment-body');
-            const toggleText = headerElement.querySelector('.comment-toggle span');
-            
-            const isActive = item.classList.contains('active');
-
-            if (isActive) {
-                item.classList.remove('active');
-                body.style.maxHeight = null;
-                toggleText.innerText = '展开';
-            } else {
-                item.classList.add('active');
-                body.style.maxHeight = body.scrollHeight + 'px';
-                toggleText.innerText = '收起';
-            }
-        }
-
-        // ================= 4. 竞赛详情弹窗 =================
-        const compData = {
-            flower: {
-                title: "“pass the romantic”鲜花全链条供应",
-                subtitle: "创始人 / 项目负责人 | 2023.03 - 2023.09",
-                content: `
-                    <h4>创业背景与职责</h4>
-                    <p>面对大学生群体对仪式感的追求与高昂鲜花价格的矛盾，她敏锐捕捉到校园鲜花市场的痛点，独立创立了专属鲜花品牌。</p>
-                    <h4>核心成果与数据</h4>
-                    <ul>
-                        <li><b>成本与定价策略：</b>运用本科所学的财务知识进行精准成本核算，制定出极具竞争力的价格体系。</li>
-                        <li><b>全渠道营销：</b>建立全平台销售矩阵，通过新客折扣与社群互动增强老客黏性。</li>
-                        <li><b>业绩亮眼：</b>整体回购率高达 <b>86%</b>，好评率与售后满意度双双达到 <b>100%</b>，验证了将商业理论转化为实际落地的能力。</li>
-                    </ul>
-                `
-            },
-            ican: {
-                title: "“Sober”——基于混合域注意力机制的疲劳驾驶检测系统",
-                subtitle: "第十六届 iCAN 省一等奖 | 2022",
-                content: `
-                    <h4>核心角色（商业与财务负责人）</h4>
-                    <ul>
-                        <li><b>市场分析：</b>主导 PEST 分析，精准锁定长途货运市场这一巨大空白。对比竞品监测逻辑，确立差异化优势。</li>
-                        <li><b>商业模式：</b>绘制商业画布（Business Model Canvas），制定渠道策略。</li>
-                        <li><b>财务预测：</b>负责项目初期的资金筹措方案，编制了未来五年的资产负债表与现金流量表，证明了项目的财务可行性。</li>
-                    </ul>
-                    <img src="cert1.jpg" alt="iCAN省一证书" class="cert-img">
-                `
-            },
-            outsourcing: {
-                title: "安徽省大学生服务外包创新创业大赛",
-                subtitle: "省级三等奖 | 2022.12",
-                content: `
-                    <h4>双胞胎赛道的差异化</h4>
-                    <p>与 iCAN 基于同一个核心技术底座（Sober 疲劳检测系统），但在本赛道中重点探讨如何将其转化为可外包、可大规模部署的 B2B 服务（针对汽车零部件企业），深入分析外包服务的成本与云算力租赁模式。</p>
-                    <img src="cert2.jpg" alt="服务外包证书" class="cert-img">
-                `
-            },
-            sanxia: {
-                title: "“探析宣州产业集群，助推宣城工业强市”三下乡实践",
-                subtitle: "省级立项 / 副队长 | 2022.07",
-                content: `
-                    <h4>核心角色（副队长）</h4>
-                    <ul>
-                        <li><b>前期政企对接：</b>负责与宣州区统计局进行深度对接，获取官方宏观经济与工业数据。</li>
-                        <li><b>实地调研：</b>深入“两园三集中区”，走访大中型企业，针对不同园区的特点设计了专属的调研问卷。</li>
-                        <li><b>学术升华（挑战杯）：</b>将调研数据与年鉴数据结合，运用 SPSS 进行定性与定量分析，构建评价指标体系，描绘产业集群生长图，荣获“挑战杯”校级二等奖。</li>
-                    </ul>
-                    <img src="cert3.jpg" alt="三下乡立项证书" class="cert-img">
-                `
-            },
-            challenge: {
-                title: "“挑战杯”课外学术科技作品竞赛",
-                subtitle: "校级二等奖 | 2023.05",
-                content: `
-                    <h4>与三下乡项目的关系</h4>
-                    <p>本项目是“三下乡”社会实践的学术升华版。将实地走访获得的定性信息，通过构建严谨的计量模型与评价指标体系转化为定量的学术成果。</p>
-                    <h4>我的核心贡献</h4>
-                    <ul>
-                        <li><b>数据清洗与建模：</b>将收集的问卷数据与统计局年鉴数据结合，运用 SPSS 等工具进行深度清洗与建模。</li>
-                        <li><b>报告撰写：</b>负责撰写核心数据分析章节，提出针对性的对策建议。</li>
-                    </ul>
-                    <img src="cert4.jpg" alt="挑战杯证书" class="cert-img">
-                `
-            }
-        };
-
-        function openCompModal(key) {
-            const data = compData[key];
-            if(!data) return;
-            document.getElementById('modalCompTitle').innerText = data.title;
-            document.getElementById('modalCompSubtitle').innerText = data.subtitle;
-            document.getElementById('modalCompBody').innerHTML = data.content;
-            document.getElementById('compModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function openOtherModal() {
-            document.getElementById('otherModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        // ================= 5. 通用关闭弹窗 =================
-        function closeModal(event) {
-            if(event.target.classList.contains('modal-overlay') || 
-               event.target.classList.contains('close-btn') || 
-               event.target.innerText === '关闭' || 
-               event.target.innerText === '×'){
-                document.querySelectorAll('.modal-overlay').forEach(modal => {
-                    modal.classList.remove('active');
-                });
-                document.body.style.overflow = 'auto';
-            }
-        }
-
-        // ================= 6. 真实 AI 岗位匹配 =================
-        function handleKeyPress(e) {
-            if (e.key === 'Enter') {
-                startAIMatching();
-            }
-        }
-
-        function quickMatch(job) {
-            document.getElementById('jobInput').value = job;
-            startAIMatching();
-        }
-
-        async function startAIMatching() {
-            const input = document.getElementById('jobInput').value.trim();
-            if (!input) {
-                alert('请输入您想要匹配的岗位名称！');
-                return;
-            }
-
-            const loading = document.getElementById('aiLoading');
-            const result = document.getElementById('aiResult');
-            
-            result.classList.remove('active');
-            loading.classList.add('active');
-
-            const RESUME_PROMPT = `
-                你是一位资深的HR和业务面试官。这是候选人栗丽婧的详细简历参考：
-                【教育】香港理工大学数字经济硕士（在读，QS50），合肥工业大学经济学本科（GPA 87.65）。
-                【技能】精通Excel（VLOOKUP/复杂函数/数据透视/Dashboard）、SQL（多表关联/分组聚合）、Python(Pandas)、STATA、SPSS。
-                【实习】
-                1. 华发集团（运营）：处理海量业主满意度问卷，进行逻辑校验，搭建动态实时数据更新Dashboard，为物业费催缴提供量化决策。
-                2. 禾和时尚（商业分析）：对接业务数据库提取销售流水，处理异常值，搭建区域/品牌/品类三级维度看板，撰写深度竞品分析报告。
-                3. 中铁十五局（数据）：维护50+类材料台账，运用数据透视表进行时间序列分析，排查库存周转异常并输出简报优化采购。
-                4. 代县农信社（风控）：清洗逾期客户数据，提取风险特征，协助搭建不良资产价值评估模型。
-                5. 锦泽工程（管理顾问）：主导市场分析、产业研究、战略规划与业务流程优化。
-                【真实获奖记录（仅限这些，严禁编造）】
-                - 校级三等奖学金（合肥工业大学）
-                - 学习进步奖（合肥工业大学）
-                - 第十六届 iCAN 大学生创新创业大赛（省级一等奖）
-                - 安徽省大学生服务外包创新创业大赛（省级三等奖）
-                - 第七届互联网+大学生创新创业大赛（省级三等奖 / 校级金奖、银奖）
-                - 大学生暑期“三下乡”社会实践活动（省级立项 / 优秀调研报告一等奖等）
-                - “挑战杯”课外学术科技作品竞赛（校级二等奖）
-                【竞赛与创业】
-                - 作为商业与财务负责人，参与“Sober”疲劳驾驶检测系统，主导PEST分析、商业画布与五年财务预测。
-                - 作为副队长，参与“探析宣州产业集群”三下乡调研，运用SPSS进行实证分析。
-                - 独立创立“pass the romantic”鲜花品牌，全渠道运营，实现极高复购率。
-            `;
-
-            const systemPrompt = `
-                ${RESUME_PROMPT}
-                请分析该候选人针对【${input}】岗位的匹配度。
-                你必须严格以 JSON 格式输出结果，不要包含任何其他废话或 Markdown 标记。JSON 格式如下：
-                {
-                    "score": "95%",
-                    "title": "极高匹配度！",
-                    "skills": ["技能1", "技能2", "技能3"],
-                    "exp": "结合简历中的某段具体经历，说明为什么匹配这个岗位。语言要专业、流畅，字数控制在80-120字。"
+    /* ============================================================
+       二、动态内容（技能 / 工作 / 竞赛 / 获奖 / AI 结果）
+    ============================================================ */
+    const DATA = {
+        zh: {
+            skills: {
+                excel: {
+                    title: 'Excel 高级处理',
+                    tag: 'FILE 01 / EXCEL',
+                    content: `<ul>
+                        <li><b>华发集团 (2025)：</b>收集清洗 <b>15,000 份</b> 问卷数据，多表关联校验，独立搭建动态实时数据更新面板（Dashboard）。</li>
+                        <li><b>山西禾和时尚 (2025)：</b>搭建多维度业务动态看板，按区域、品牌及品类拆解销售表现，定位异常波动。</li>
+                        <li><b>中铁十五局 (2024)：</b>针对50+类建筑材料台账，利用 Excel 对采购、库存与消耗数据进行趋势分析。</li>
+                    </ul>`
+                },
+                sql: {
+                    title: 'SQL 数据提取',
+                    tag: 'FILE 02 / SQL',
+                    content: `<ul>
+                        <li><b>山西禾和时尚 (2025)：</b>独立运用 SQL 从业务数据库中提取门店、品牌与销售流水记录，对近 <b>10万条</b> 交易数据进行 Join、Group by 处理，高效完成异常值清洗。</li>
+                    </ul>`
+                },
+                python: {
+                    title: 'Python (Pandas)',
+                    tag: 'FILE 03 / PYTHON',
+                    content: `<ul>
+                        <li><b>“金银手指”二手交易平台项目：</b>面对平台日益庞大的交易记录，采用 <b>Excel + Python (Pandas)</b> 的方式，实现日常交易记录的自动化清洗与月度交易分析总结，大幅提升运营效率。</li>
+                    </ul>`
+                },
+                stata: {
+                    title: 'STATA 计量建模',
+                    tag: 'FILE 04 / STATA',
+                    content: `<ul>
+                        <li><b>安徽省生产性服务业对产业结构优化的影响研究：</b>抓取并清洗 2010-2020 年安徽省 16 个地级市的面板数据，使用 STATA 进行 <b>Hausman 检验</b>，最终确立固定效应模型完成回归分析。</li>
+                    </ul>`
+                },
+                spss: {
+                    title: 'SPSS 统计检验',
+                    tag: 'FILE 05 / SPSS',
+                    content: `<ul>
+                        <li><b>大学生隐形眼镜使用行为研究：</b>发放467份问卷，利用 SPSS 进行多维交叉分析、列联表卡方检验，构建 <b>结构方程模型 (SEM)</b> 与多分类 Logit 模型。</li>
+                        <li><b>中小城市工业产业集群调研 (三下乡)：</b>深入企业实地访谈，使用 SPSS 进行问卷数据清洗与统计分析。</li>
+                    </ul>`
                 }
-            `;
+            },
 
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/chat`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        messages: [
-                            { role: "system", content: systemPrompt },
-                            { role: "user", content: `请开始匹配：${input}` }
-                        ],
-                        temperature: 0.5
-                    })
-                });
+            work: [
+                {
+                    avatar: '华',
+                    company: '华发集团',
+                    role: '项目运营专员',
+                    date: '2025.11 - 2026.07',
+                    cert: null,
+                    points: [
+                        '统筹园区品质宣传与社区活动策划，主导业主意见征询及满意度调研的数据分析。',
+                        '收集并清洗 <b>15,000 份</b> 问卷数据，熟练运用 Excel（VLOOKUP、复杂函数公式）进行多表关联与数据校验。',
+                        '独立搭建动态实时数据更新面板（Dashboard），为园区品质提升及物业费催缴提供强有力的量化决策依据。'
+                    ]
+                },
+                {
+                    avatar: '禾',
+                    company: '山西禾和时尚科技有限公司',
+                    role: '商业分析助理',
+                    date: '2025.01 - 2025.08',
+                    cert: 'InternshipCertificate1.jpg',
+                    points: [
+                        '运用 SQL 从业务数据库中提取门店、品牌与销售流水记录，对近 <b>10万条</b> 交易数据进行清洗与异常值处理。',
+                        '熟练使用 Excel 搭建多维度业务动态看板，按区域、品牌及品类拆解销售表现并定位异常波动。',
+                        '收集同商圈竞品的定价与促销数据，撰写竞品分析报告，为调整货品调配与销售策略提供数据支撑。'
+                    ]
+                },
+                {
+                    avatar: '铁',
+                    company: '中铁十五局集团有限公司',
+                    role: '数据实习生',
+                    date: '2024.09 - 2024.12',
+                    cert: 'InternshipCertificate2.jpg',
+                    points: [
+                        '负责材料进出场信息的录入与逻辑校验，建立并维护覆盖 <b>50+类</b> 建筑材料的数字化台账，保障上万条底层数据的准确性。',
+                        '使用 Excel 对材料采购、库存与消耗数据进行趋势分析，排查出部分材料库存周转偏慢等异常情况。',
+                        '输出数据简报，为项目部优化后续采购计划与供应链调度提供基础数据参考。'
+                    ]
+                },
+                {
+                    avatar: '信',
+                    company: '代县农村信用合作联社',
+                    role: '风险管理实习生',
+                    date: '2024.01 - 2024.02',
+                    cert: 'InternshipCertificate3.jpg',
+                    points: [
+                        '基于不良资产台账，使用 Excel 对 <b>300+户</b> 逾期客户数据进行清洗与分类。',
+                        '提取逾期天数、欠款金额等关键风险特征，协助搭建不良资产价值评估模型。',
+                        '为部门季度风险排查与催收策略提供数据依据。'
+                    ]
+                },
+                {
+                    avatar: '锦',
+                    company: '山西锦泽工程科技有限公司',
+                    role: '管理顾问',
+                    date: '2022.12 - 2023.01',
+                    cert: 'InternshipCertificate4.jpg',
+                    points: [
+                        '从事市场分析、产业研究、战略规划等工作。',
+                        '基于市场分析和行业研究，识别企业战略目标，参与制定组织策略与行动计划。',
+                        '通过优化企业结构和业务流程提升运营效率，协助设计并实施管理系统。'
+                    ]
+                }
+            ],
 
-                if (!response.ok) throw new Error('网络请求失败');
-                const data = await response.json();
-                const aiText = data.choices[0].message.content;
-                
-                const cleanJSON = aiText.replace(/```json/g, '').replace(/```/g, '').trim();
-                const resultData = JSON.parse(cleanJSON);
+            comps: [
+                {
+                    tag: '创业项目',
+                    award: false,
+                    title: '“pass the romantic”鲜花全链条供应',
+                    desc: '以大学生为目标群体，独立创立并运营鲜花品牌，负责从采购、包装、营销到售后的全流程管理。',
+                    date: '2023.03 - 2023.09',
+                    body: `
+                        <h4>创业背景与职责</h4>
+                        <p>以大学生为目标群体，独立创立并运营鲜花品牌，负责从采购、包装、营销到售后的全流程管理。</p>
+                        <h4>核心成果与数据</h4>
+                        <ul>
+                            <li><b>成本与定价：</b>运用财务知识进行成本核算，无场地租借费，货源性价比高，制定具有竞争力的价格体系。</li>
+                            <li><b>全渠道营销：</b>建立QQ、微信、抖音、小红书全平台销售网络，通过新客折扣与老客黏性提高转化率。</li>
+                            <li><b>业绩亮眼：</b>成功促成 <b>28 对爱情</b>，整体回购率高达 <b>86%</b>，好评率与售后满意度均达 100%，获得了人生的第一桶金。</li>
+                        </ul>`
+                },
+                {
+                    tag: '省级一等奖',
+                    award: true,
+                    title: '第十六届 iCAN 创新创业大赛',
+                    desc: '参赛作品：“Sober”——基于混合域注意力机制的疲劳驾驶检测系统。负责商业定位、竞品分析与定价策略。',
+                    date: '2022.09',
+                    body: `
+                        <h4>项目背景</h4>
+                        <p>针对长途货运司机疲劳驾驶引发高死亡率交通事故的痛点，团队研发了一款高精度车载检测系统。系统融合了YOLOv5s面部捕捉、IBCLN反光去除、UNet瞳孔预测等前沿技术。</p>
+                        <h4>我的核心职责（商业与财务负责人）</h4>
+                        <ul>
+                            <li><b>市场分析：</b>主导宏观环境（PEST）分析，对比沃尔沃、奔驰等竞品，挖掘长途货运市场的巨大空白；完成SWOT综合分析。</li>
+                            <li><b>商业模式：</b>制定“直销+分销+联盟合作”的营销渠道策略，绘制商业画布（Business Model Canvas）。</li>
+                            <li><b>财务预测：</b>负责项目初期的资金筹措（自筹、天使投资、银行贷款），编制未来五年的资产负债表与现金流量表，确保财务可行性。</li>
+                            <li><b>竞品与定价：</b>针对市面产品误报率高、造价昂贵等缺点，提出低成本、云端部署的差异化定价策略。</li>
+                        </ul>
+                        <img src="cert1.jpg" alt="iCAN省一证书" class="cert-img">`
+                },
+                {
+                    tag: '省级三等奖',
+                    award: true,
+                    title: '安徽省大学生服务外包创新创业大赛',
+                    desc: '基于Sober项目的商业化落地方案，重点探讨服务外包模式与运营策略。',
+                    date: '2022.12',
+                    body: `
+                        <h4>与 iCAN 项目的渊源</h4>
+                        <p>本项目与 iCAN 大赛基于同一个核心技术底座（Sober 疲劳检测系统），但<b>侧重点完全不同</b>。</p>
+                        <h4>服务外包侧重点</h4>
+                        <ul>
+                            <li><b>落地性与服务模式：</b>重点探讨如何将 Sober 系统转化为可外包、可大规模部署的服务。针对汽车零部件企业、长途客运公司设计了具体的 B2B 服务外包方案。</li>
+                            <li><b>成本与运营结构：</b>深入分析外包服务的成本结构，优化算法部署与云端算力的租赁模式，降低终端的硬件部署成本。</li>
+                        </ul>
+                        <img src="cert2.jpg" alt="服务外包证书" class="cert-img">`
+                },
+                {
+                    tag: '省级立项 / 副队长',
+                    award: true,
+                    title: '“探析宣州产业集群”三下乡实践',
+                    desc: '作为副队长，协助统筹规划，负责前期与统计局的对接沟通，以及后期的数据分析与活动宣传。',
+                    date: '2022.07',
+                    body: `
+                        <h4>项目背景与我的职责</h4>
+                        <p>作为副队长，协助队长统筹规划。主要负责前期对接宣州区统计局，中期的实地调研与数据收集，以及后期的数据分析与宣传总结。本项目也是后续“挑战杯”参赛作品的原始数据与调研基础。</p>
+                        <h4>核心调研过程</h4>
+                        <ul>
+                            <li><b>实地走访：</b>深入宣州区“两园三集中区”（高新区、经开区等），聚焦“3+2”现代产业体系，走访大中型企业，收集一手经营数据。</li>
+                            <li><b>政企对接：</b>与宣州区统计局建立联系，获取官方宏观经济与工业数据，确保调研的权威性与准确性。</li>
+                            <li><b>成果产出：</b>主笔撰写《中小城市工业产业集群调查研究报告》初稿，荣获“优秀实践调研报告一等奖”。</li>
+                        </ul>
+                        <img src="cert3.jpg" alt="三下乡立项证书" class="cert-img">`
+                },
+                {
+                    tag: '校级二等奖',
+                    award: true,
+                    title: '“挑战杯”课外学术科技作品竞赛',
+                    desc: '基于三下乡调研数据，深度分析宣州区产业集群现状，建立评价指标体系并完成学术报告。',
+                    date: '2023.05',
+                    body: `
+                        <h4>与三下乡项目的关系</h4>
+                        <p>本项目是“三下乡”社会实践的<b>学术升华版</b>。将实地走访获得的定性信息，通过构建严谨的计量模型与评价指标体系转化为定量的学术成果。</p>
+                        <h4>我的核心贡献</h4>
+                        <ul>
+                            <li><b>数据清洗与建模：</b>将三下乡收集的问卷数据与统计局年鉴数据结合，运用 SPSS 等工具进行深度清洗。</li>
+                            <li><b>量化评估：</b>探索性运用主成分分析、BP神经网络等模型，对园区产业集群竞争力与创新能力进行量化评估。</li>
+                            <li><b>报告撰写：</b>负责撰写核心数据分析章节，描绘产业集群生长图，提出针对性的对策建议。</li>
+                        </ul>
+                        <img src="cert4.jpg" alt="挑战杯证书" class="cert-img">`
+                },
+                {
+                    tag: '综合荣誉',
+                    award: false,
+                    title: '其他获奖经历',
+                    desc: '涵盖奖学金、优秀共青团员、各类校级学科竞赛及优秀实践团队等综合荣誉。',
+                    date: '2021 - 2023',
+                    type: 'other'
+                }
+            ],
 
-                document.getElementById('matchScore').innerText = resultData.score;
-                document.getElementById('matchTitle').innerText = resultData.title;
-                document.getElementById('matchSkills').innerHTML = resultData.skills.map(s => `<span class="match-skill-badge">${s}</span>`).join('');
-                document.getElementById('matchExp').innerHTML = resultData.exp;
+            awards: [
+                { date: '2023.12', title: '合肥工业大学三等奖学金' },
+                { date: '2022.12', title: '合肥工业大学学习进步奖' },
+                { date: '2022.07', title: '合肥工业大学暑期“三下乡”优秀实践调研报告一等奖、优秀实践图片二等奖等多项荣誉' },
+                { date: '2022.04', title: '第五届合肥工业大学市场调查与分析大赛 三等奖' },
+                { date: '2021.11', title: '第七届合肥工业大学宣城校区企业竞争模拟大赛 三等奖' },
+                { date: '2021.07', title: '第七届安徽省“互联网+”大学生创新创业大赛 初创组铜奖' },
+                { date: '2021.05', title: '第六届全国学术英语词汇竞赛 三等奖' },
+                { date: '2021.03', title: '第六届合肥工业大学商业计划书大赛 二等奖' }
+            ],
 
-                loading.classList.remove('active');
-                result.classList.add('active');
+            ai: {
+                '数据分析师': {
+                    score: '98%',
+                    title: '极高匹配度！',
+                    skills: ['Excel', 'SQL', 'Python', 'STATA'],
+                    exp: '高度匹配您在 <b>山西禾和时尚科技</b> 的商业分析实习经历：独立运用 SQL 提取近10万条流水数据，利用 Python/Excel 搭建多维看板，精准定位业务异常。同时，您在 <b>华发集团</b> 独立清洗 1.5 万份问卷并搭建 Dashboard 的经验完美契合该岗位的数据处理与可视化要求。'
+                },
+                '商业分析师': {
+                    score: '96%',
+                    title: '极高匹配度！',
+                    skills: ['Excel', 'SQL', '商业洞察', '竞品分析'],
+                    exp: '高度匹配您在 <b>禾和时尚</b> 的竞品分析与策略支持经验，以及 <b>“Sober”疲劳检测项目</b> 中负责的 PEST 宏观分析、商业画布构建和财务模型预测。您具备出色的将数据转化为商业决策依据的能力。'
+                },
+                '产品运营': {
+                    score: '92%',
+                    title: '高匹配度！',
+                    skills: ['数据分析', '活动策划', '用户调研'],
+                    exp: '您在 <b>华发集团</b> 主导的园区品质宣传与社区活动策划，以及 <b>“pass the romantic”鲜花创业项目</b> 中展现的全渠道营销（QQ/微信/小红书）和高达 86% 的用户复购率，充分证明了您的用户运营与活动策划落地能力。'
+                },
+                '金融风控': {
+                    score: '95%',
+                    title: '极高匹配度！',
+                    skills: ['Excel', 'SPSS', '风险评估', '计量建模'],
+                    exp: '高度匹配您在 <b>代县农信社</b> 的风险管理实习：使用 Excel 清洗 300+ 户逾期客户数据，提取关键风险特征并协助搭建不良资产价值评估模型。您在学术研究中熟练使用 STATA 和 SPSS 进行假设检验，具备扎实的量化分析基础。'
+                },
+                'default': {
+                    score: '88%',
+                    title: '良好匹配度',
+                    skills: ['数据分析', '商业分析', '项目统筹'],
+                    exp: '栗丽婧具备扎实的经济学与数据科学交叉背景。她不仅在多段实习中积累了海量数据清洗（如1.5万份问卷、10万条流水）与可视化看板的实战经验，还具备从 0 到 1 的商业项目统筹与落地能力，能够快速适应各类商业分析岗位的需求。'
+                }
+            }
+        },
 
-            } catch (error) {
-                console.error(error);
-                loading.classList.remove('active');
-                alert('AI 匹配失败：' + error.message + '\n请检查 Vercel 域名是否填写正确。');
+        en: {
+            skills: {
+                excel: {
+                    title: 'Advanced Excel',
+                    tag: 'FILE 01 / EXCEL',
+                    content: `<ul>
+                        <li><b>Huafa Group (2025):</b> Collected and cleaned <b>15,000</b> questionnaire records, performed multi-table validation, and independently built a dynamic real-time dashboard.</li>
+                        <li><b>Shanxi Hehe Fashion (2025):</b> Built multi-dimensional dynamic business dashboards, breaking down sales performance by region, brand and category to identify abnormal fluctuations.</li>
+                        <li><b>China Railway 15th Bureau (2024):</b> For a ledger of 50+ types of building materials, used Excel to analyse trends in procurement, inventory and consumption.</li>
+                    </ul>`
+                },
+                sql: {
+                    title: 'SQL Data Extraction',
+                    tag: 'FILE 02 / SQL',
+                    content: `<ul>
+                        <li><b>Shanxi Hehe Fashion (2025):</b> Independently used SQL to extract store, brand and sales transaction records from the business database, performing Join and Group by operations on nearly <b>100,000</b> transaction records to efficiently clean outliers.</li>
+                    </ul>`
+                },
+                python: {
+                    title: 'Python (Pandas)',
+                    tag: 'FILE 03 / PYTHON',
+                    content: `<ul>
+                        <li><b>"Golden Fingers" Second-hand Trading Platform:</b> Faced with growing transaction records, adopted <b>Excel + Python (Pandas)</b> to automate daily transaction cleaning and monthly transaction summaries, greatly improving operational efficiency.</li>
+                    </ul>`
+                },
+                stata: {
+                    title: 'STATA Econometric Modeling',
+                    tag: 'FILE 04 / STATA',
+                    content: `<ul>
+                        <li><b>Research on the Impact of Producer Services on Industrial Structure Optimization in Anhui Province:</b> Collected and cleaned panel data of 16 prefecture-level cities in Anhui from 2010 to 2020, used STATA to conduct the <b>Hausman test</b>, and established a fixed-effects model for regression analysis.</li>
+                    </ul>`
+                },
+                spss: {
+                    title: 'SPSS Statistical Testing',
+                    tag: 'FILE 05 / SPSS',
+                    content: `<ul>
+                        <li><b>Study on Contact Lens Usage Behaviour among College Students:</b> Distributed 467 questionnaires, used SPSS for multi-dimensional cross analysis and contingency-table chi-square tests, and built a <b>Structural Equation Model (SEM)</b> and a multinomial Logit model.</li>
+                        <li><b>Survey on Industrial Clusters in Small and Medium-sized Cities (Summer Practice):</b> Conducted in-depth on-site interviews with enterprises and used SPSS for questionnaire data cleaning and statistical analysis.</li>
+                    </ul>`
+                }
+            },
+
+            work: [
+                {
+                    avatar: '华',
+                    company: 'Huafa Group',
+                    role: 'Project Operations Specialist',
+                    date: '2025.11 - 2026.07',
+                    cert: null,
+                    points: [
+                        'Coordinated park quality promotion and community event planning; led owner opinion surveys and satisfaction research data analysis.',
+                        'Collected and cleaned <b>15,000</b> questionnaire records, using Excel (VLOOKUP, complex formulas) for multi-table joins and data validation.',
+                        'Independently built a dynamic real-time dashboard, providing quantitative decision support for park quality improvement and property fee collection.'
+                    ]
+                },
+                {
+                    avatar: '禾',
+                    company: 'Shanxi Hehe Fashion Technology Co., Ltd.',
+                    role: 'Business Analysis Assistant',
+                    date: '2025.01 - 2025.08',
+                    cert: 'InternshipCertificate1.jpg',
+                    points: [
+                        'Used SQL to extract store, brand and sales transaction records from the business database; cleaned and handled outliers in nearly <b>100,000</b> transaction records.',
+                        'Built multi-dimensional dynamic business dashboards in Excel, breaking down sales performance by region, brand and category to identify abnormal fluctuations.',
+                        'Collected competitor pricing and promotion data in the same business district, wrote competitor analysis reports, and provided data support for adjusting product allocation and sales strategies.'
+                    ]
+                },
+                {
+                    avatar: '铁',
+                    company: 'China Railway 15th Bureau Group Co., Ltd.',
+                    role: 'Data Intern',
+                    date: '2024.09 - 2024.12',
+                    cert: 'InternshipCertificate2.jpg',
+                    points: [
+                        'Responsible for entry and logical validation of material in/out records; built and maintained a digital ledger covering <b>50+ types</b> of building materials, ensuring the accuracy of tens of thousands of underlying data records.',
+                        'Used Excel to analyse trends in material procurement, inventory and consumption, identifying anomalies such as slow inventory turnover for certain materials.',
+                        'Produced data briefs to provide foundational reference for the project department to optimise procurement plans and supply chain scheduling.'
+                    ]
+                },
+                {
+                    avatar: '信',
+                    company: 'Daixian Rural Credit Union',
+                    role: 'Risk Management Intern',
+                    date: '2024.01 - 2024.02',
+                    cert: 'InternshipCertificate3.jpg',
+                    points: [
+                        'Based on the non-performing asset ledger, used Excel to clean and classify data for <b>300+</b> overdue customers.',
+                        'Extracted key risk features such as overdue days and outstanding amounts; assisted in building a non-performing asset valuation model.',
+                        'Provided a data basis for the department\'s quarterly risk screening and collection strategies.'
+                    ]
+                },
+                {
+                    avatar: '锦',
+                    company: 'Shanxi Jinze Engineering Technology Co., Ltd.',
+                    role: 'Management Consultant',
+                    date: '2022.12 - 2023.01',
+                    cert: 'InternshipCertificate4.jpg',
+                    points: [
+                        'Engaged in market analysis, industry research and strategic planning.',
+                        'Based on market analysis and industry research, identified corporate strategic goals and participated in formulating organisational strategies and action plans.',
+                        'Improved operational efficiency by optimising corporate structure and business processes; assisted in designing and implementing management systems.'
+                    ]
+                }
+            ],
+
+            comps: [
+                {
+                    tag: 'Startup Project',
+                    award: false,
+                    title: '"Pass the Romantic" Full-Chain Flower Supply',
+                    desc: 'Founded and operated an independent flower brand targeting university students, managing the entire process from procurement, packaging and marketing to after-sales service.',
+                    date: '2023.03 - 2023.09',
+                    body: `
+                        <h4>Background & Responsibilities</h4>
+                        <p>Founded and operated an independent flower brand targeting university students, managing the entire process from procurement, packaging and marketing to after-sales service.</p>
+                        <h4>Key Results & Data</h4>
+                        <ul>
+                            <li><b>Cost & Pricing:</b> Applied financial knowledge for cost accounting; no venue rental costs and a high value-for-money supply chain, enabling a competitive pricing structure.</li>
+                            <li><b>Omni-channel Marketing:</b> Built a sales network across QQ, WeChat, Douyin and Xiaohongshu, improving conversion through new-customer discounts and returning-customer loyalty.</li>
+                            <li><b>Strong Performance:</b> Successfully matched <b>28 couples</b>, achieved a <b>86%</b> repurchase rate, 100% positive reviews and after-sales satisfaction, and earned her first pot of gold.</li>
+                        </ul>`
+                },
+                {
+                    tag: 'Provincial First Prize',
+                    award: true,
+                    title: 'The 16th iCAN Innovation and Entrepreneurship Competition',
+                    desc: 'Project: "Sober" — a fatigue driving detection system based on hybrid-domain attention mechanisms. Responsible for business positioning, competitor analysis and pricing strategy.',
+                    date: '2022.09',
+                    body: `
+                        <h4>Background</h4>
+                        <p>To address the high fatality rate of accidents caused by fatigued long-haul truck drivers, the team developed a high-precision in-vehicle detection system integrating YOLOv5s facial capture, IBCLN reflection removal and UNet pupil prediction.</p>
+                        <h4>My Core Role (Business & Finance Lead)</h4>
+                        <ul>
+                            <li><b>Market Analysis:</b> Led PEST macro-environment analysis, benchmarked against Volvo, Mercedes-Benz and other competitors, identified a large gap in the long-haul freight market, and completed a SWOT analysis.</li>
+                            <li><b>Business Model:</b> Designed a "direct sales + distribution + alliance" channel strategy and drew up a Business Model Canvas.</li>
+                            <li><b>Financial Forecast:</b> Responsible for early-stage fundraising (self-funding, angel investment, bank loans) and prepared five-year balance sheets and cash flow statements to ensure financial feasibility.</li>
+                            <li><b>Competition & Pricing:</b> Against the high false-alarm rates and high costs of existing products, proposed a differentiated low-cost, cloud-deployed pricing strategy.</li>
+                        </ul>
+                        <img src="cert1.jpg" alt="iCAN Provincial First Prize Certificate" class="cert-img">`
+                },
+                {
+                    tag: 'Provincial Third Prize',
+                    award: true,
+                    title: 'Anhui Province College Student Service Outsourcing Innovation and Entrepreneurship Competition',
+                    desc: 'A commercialisation plan based on the Sober project, focusing on service outsourcing models and operational strategies.',
+                    date: '2022.12',
+                    body: `
+                        <h4>Link to the iCAN Project</h4>
+                        <p>This project shares the same core technology base as the iCAN entry (the Sober fatigue detection system), but with a <b>completely different focus</b>.</p>
+                        <h4>Service Outsourcing Focus</h4>
+                        <ul>
+                            <li><b>Deployability & Service Model:</b> Focused on turning the Sober system into an outsourced, large-scale deployable service. Designed concrete B2B service outsourcing plans for auto parts manufacturers and long-haul passenger transport companies.</li>
+                            <li><b>Cost & Operating Structure:</b> Analysed the cost structure of outsourced services in depth and optimised algorithm deployment and cloud computing rental models to reduce terminal hardware deployment costs.</li>
+                        </ul>
+                        <img src="cert2.jpg" alt="Service Outsourcing Certificate" class="cert-img">`
+                },
+                {
+                    tag: 'Provincial Project / Deputy Lead',
+                    award: true,
+                    title: '"Exploring Xuanzhou Industrial Clusters" Summer Social Practice',
+                    desc: 'As deputy team leader, assisted in overall planning, handled early-stage communication with the Statistics Bureau, and was responsible for later data analysis and promotion.',
+                    date: '2022.07',
+                    body: `
+                        <h4>Background & My Role</h4>
+                        <p>As deputy team leader, I assisted the team leader with overall planning. I was mainly responsible for early-stage liaison with the Xuanzhou District Statistics Bureau, mid-stage field research and data collection, and later data analysis and promotional summaries. This project also provided the raw data and research foundation for the subsequent Challenge Cup entry.</p>
+                        <h4>Core Research Process</h4>
+                        <ul>
+                            <li><b>Field Visits:</b> Went deep into Xuanzhou District's "two parks and three concentration zones" (high-tech zone, economic development zone, etc.), focused on the "3+2" modern industrial system, and visited large and medium-sized enterprises to collect first-hand operational data.</li>
+                            <li><b>Government & Enterprise Liaison:</b> Established contact with the Xuanzhou District Statistics Bureau to obtain official macroeconomic and industrial data, ensuring the authority and accuracy of the research.</li>
+                            <li><b>Deliverables:</b> Wrote the first draft of the "Research Report on Industrial Clusters in Small and Medium-sized Cities", which won the First Prize for Outstanding Practice Research Report.</li>
+                        </ul>
+                        <img src="cert3.jpg" alt="Summer Practice Project Certificate" class="cert-img">`
+                },
+                {
+                    tag: 'University Second Prize',
+                    award: true,
+                    title: '"Challenge Cup" Extracurricular Academic Science and Technology Works Competition',
+                    desc: 'Based on the summer practice data, deeply analysed the current status of industrial clusters in Xuanzhou District, established an evaluation index system and completed an academic report.',
+                    date: '2023.05',
+                    body: `
+                        <h4>Relationship to the Summer Practice Project</h4>
+                        <p>This project is the <b>academic upgrade</b> of the summer social practice. Qualitative information obtained through field visits was transformed into quantitative academic results through rigorous econometric models and evaluation index systems.</p>
+                        <h4>My Core Contribution</h4>
+                        <ul>
+                            <li><b>Data Cleaning & Modelling:</b> Combined questionnaire data from the summer practice with statistical yearbook data, and used SPSS and other tools for in-depth cleaning.</li>
+                            <li><b>Quantitative Evaluation:</b> Exploratorily applied principal component analysis, BP neural networks and other models to quantitatively evaluate the competitiveness and innovation capacity of the park's industrial clusters.</li>
+                            <li><b>Report Writing:</b> Responsible for writing the core data analysis chapters, mapping the growth of industrial clusters, and proposing targeted countermeasures.</li>
+                        </ul>
+                        <img src="cert4.jpg" alt="Challenge Cup Certificate" class="cert-img">`
+                },
+                {
+                    tag: 'Honours',
+                    award: false,
+                    title: 'Other Awards',
+                    desc: 'Covering scholarships, Outstanding Communist Youth League Member, various university-level academic competitions and outstanding practice teams.',
+                    date: '2021 - 2023',
+                    type: 'other'
+                }
+            ],
+
+            awards: [
+                { date: '2023.12', title: 'Hefei University of Technology Third-Class Scholarship' },
+                { date: '2022.12', title: 'Hefei University of Technology Academic Progress Award' },
+                { date: '2022.07', title: 'First Prize for Outstanding Practice Research Report, Second Prize for Outstanding Practice Photos and other honours in the HFUT Summer "Three Down to the Countryside" Programme' },
+                { date: '2022.04', title: 'Third Prize, 5th HFUT Market Research and Analysis Competition' },
+                { date: '2021.11', title: 'Third Prize, 7th HFUT Xuancheng Campus Enterprise Competition Simulation Contest' },
+                { date: '2021.07', title: 'Bronze Award (Startup Group), 7th Anhui "Internet+" College Student Innovation and Entrepreneurship Competition' },
+                { date: '2021.05', title: 'Third Prize, 6th National Academic English Vocabulary Competition' },
+                { date: '2021.03', title: 'Second Prize, 6th HFUT Business Plan Competition' }
+            ],
+
+            ai: {
+                'Data Analyst': {
+                    score: '98%',
+                    title: 'Excellent Match!',
+                    skills: ['Excel', 'SQL', 'Python', 'STATA'],
+                    exp: 'Strong match with your business analysis internship at <b>Shanxi Hehe Fashion Technology</b>: independently used SQL to extract nearly 100,000 transaction records and built multi-dimensional dashboards with Python/Excel to pinpoint business anomalies. Your experience at <b>Huafa Group</b> independently cleaning 15,000 questionnaires and building a dashboard perfectly fits the data processing and visualisation requirements of this role.'
+                },
+                'Business Analyst': {
+                    score: '96%',
+                    title: 'Excellent Match!',
+                    skills: ['Excel', 'SQL', 'Business Insight', 'Competitor Analysis'],
+                    exp: 'Strong match with your competitor analysis and strategy support work at <b>Hehe Fashion</b>, as well as the PEST macro analysis, Business Model Canvas and financial forecasting you led in the <b>"Sober" fatigue detection project</b>. You have a proven ability to turn data into business decisions.'
+                },
+                'Product Operations': {
+                    score: '92%',
+                    title: 'Strong Match!',
+                    skills: ['Data Analysis', 'Event Planning', 'User Research'],
+                    exp: 'Your leadership of park quality promotion and community event planning at <b>Huafa Group</b>, together with the omni-channel marketing (QQ/WeChat/Xiaohongshu) and 86% repurchase rate demonstrated in the <b>"Pass the Romantic" flower startup</b>, fully prove your user operations and event execution capabilities.'
+                },
+                'Risk Control': {
+                    score: '95%',
+                    title: 'Excellent Match!',
+                    skills: ['Excel', 'SPSS', 'Risk Assessment', 'Econometric Modeling'],
+                    exp: 'Strong match with your risk management internship at <b>Daixian Rural Credit Union</b>: used Excel to clean data for 300+ overdue customers, extracted key risk features and assisted in building a non-performing asset valuation model. Your academic work using STATA and SPSS for hypothesis testing gives you a solid quantitative foundation.'
+                },
+                'default': {
+                    score: '88%',
+                    title: 'Good Match',
+                    skills: ['Data Analysis', 'Business Analysis', 'Project Coordination'],
+                    exp: 'Lijing Li has a solid interdisciplinary background in economics and data science. She has not only accumulated hands-on experience in large-scale data cleaning (15,000 questionnaires, 100,000 transaction records) and dashboard visualisation across multiple internships, but also demonstrated end-to-end business project coordination and execution, making her quickly adaptable to a wide range of business analysis roles.'
+                }
             }
         }
+    };
 
-        // ================= 7. 真实悬浮 AI 助手 =================
-        function toggleAiChat() {
-            const win = document.getElementById('ai-chat-window');
-            win.style.display = win.style.display === 'none' ? 'flex' : 'none';
+    /* ============================================================
+       三、状态与初始化
+    ============================================================ */
+    let currentLang = 'zh';
+    let currentSkill = 'excel';
+    let lastAiKey = null;
+    let currentCompIndex = null;
+    const expandedWork = new Set();
+
+    /* ============================================================
+       四、语言应用
+    ============================================================ */
+    function applyLang(lang) {
+        currentLang = (lang === 'en') ? 'en' : 'zh';
+        const t = I18N[currentLang];
+
+        document.documentElement.lang = (currentLang === 'zh') ? 'zh-CN' : 'en';
+        document.title = t['meta.title'];
+
+        // 静态文本
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (t[key] !== undefined) el.textContent = t[key];
+        });
+        document.querySelectorAll('[data-i18n-html]').forEach(el => {
+            const key = el.getAttribute('data-i18n-html');
+            if (t[key] !== undefined) el.innerHTML = t[key];
+        });
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-i18n-placeholder');
+            if (t[key] !== undefined) el.placeholder = t[key];
+        });
+
+        // AI 快捷标签
+        const aiTags = document.querySelectorAll('.ai-tag');
+        if (aiTags.length === 4) {
+            aiTags[0].textContent = t['ai.tag1'];
+            aiTags[0].setAttribute('onclick', `quickMatch('${t['ai.tag1']}')`);
+            aiTags[1].textContent = t['ai.tag2'];
+            aiTags[1].setAttribute('onclick', `quickMatch('${t['ai.tag2']}')`);
+            aiTags[2].textContent = t['ai.tag3'];
+            aiTags[2].setAttribute('onclick', `quickMatch('${t['ai.tag3']}')`);
+            aiTags[3].textContent = t['ai.tag4'];
+            aiTags[3].setAttribute('onclick', `quickMatch('${t['ai.tag4']}')`);
         }
 
-        function askPreset(q) {
-            document.getElementById('ai-chat-input').value = q;
-            sendAiMessage();
+        // 语言按钮显示目标语言
+        document.getElementById('langBtn').textContent = (currentLang === 'zh') ? 'EN' : '中文';
+
+        // 动态内容重新渲染
+        renderSkillTags();
+        renderSkill(currentSkill);
+        renderWork();
+        renderComps();
+        renderAwards();
+
+        // 若 AI 结果已存在，则重绘
+        if (lastAiKey !== null) renderAiResult(lastAiKey);
+
+        // 若竞赛弹窗打开，则重绘
+        if (currentCompIndex !== null) fillCompModal(currentCompIndex);
+
+        localStorage.setItem('site-lang', currentLang);
+    }
+
+    function toggleLang() {
+        applyLang(currentLang === 'zh' ? 'en' : 'zh');
+    }
+
+    /* ============================================================
+       五、技能区
+    ============================================================ */
+    const SKILL_ORDER = ['excel', 'sql', 'python', 'stata', 'spss'];
+
+    function renderSkillTags() {
+        const container = document.getElementById('skillTagsContainer');
+        container.innerHTML = SKILL_ORDER.map(key => {
+            const title = DATA[currentLang].skills[key].title;
+            const active = (key === currentSkill) ? ' active' : '';
+            return `<button class="skill-nav-btn${active}" onclick="switchSkill('${key}', this)">${title}</button>`;
+        }).join('');
+    }
+
+    function switchSkill(key, btn) {
+        currentSkill = key;
+        const data = DATA[currentLang].skills[key];
+        document.getElementById('skillTag').textContent = data.tag;
+        document.getElementById('skillTitle').textContent = data.title;
+        const contentEl = document.getElementById('skillContent');
+        contentEl.style.opacity = 0;
+        setTimeout(() => {
+            contentEl.innerHTML = data.content;
+            contentEl.style.opacity = 1;
+        }, 150);
+
+        document.querySelectorAll('.skill-nav-btn').forEach(b => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+        else {
+            const idx = SKILL_ORDER.indexOf(key);
+            const btns = document.querySelectorAll('.skill-nav-btn');
+            if (btns[idx]) btns[idx].classList.add('active');
+        }
+    }
+
+    // 简单渲染（语言切换时用，不做淡出动画）
+    function renderSkill(key) {
+        const data = DATA[currentLang].skills[key];
+        document.getElementById('skillTag').textContent = data.tag;
+        document.getElementById('skillTitle').textContent = data.title;
+        document.getElementById('skillContent').innerHTML = data.content;
+    }
+
+    /* ============================================================
+       六、工作经历
+    ============================================================ */
+    function renderWork() {
+        const t = I18N[currentLang];
+        const list = document.getElementById('workList');
+        list.innerHTML = DATA[currentLang].work.map((w, i) => {
+            const isOpen = expandedWork.has(i);
+            return `
+            <div class="comment-item${isOpen ? ' active' : ''}" data-index="${i}">
+                <div class="comment-header" onclick="toggleComment(this)">
+                    <div class="comment-info">
+                        <div class="comment-avatar">${w.avatar}</div>
+                        <div class="comment-meta">
+                            <h4>${w.company}</h4>
+                            <p>${w.role} | ${w.date}</p>
+                        </div>
+                    </div>
+                    <div class="comment-toggle">
+                        <span>${isOpen ? t['work.collapse'] : t['work.expand']}</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </div>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-content-inner">
+                        <h4>${t['work.coreDuties']}</h4>
+                        <ul>${w.points.map(p => `<li>${p}</li>`).join('')}</ul>
+                        ${w.cert ? `<h4>${t['work.cert']}</h4><img src="${w.cert}" alt="${t['work.cert']}" class="cert-img">` : ''}
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+
+        // 恢复展开状态的高度
+        list.querySelectorAll('.comment-item.active').forEach(item => {
+            const body = item.querySelector('.comment-body');
+            body.style.maxHeight = body.scrollHeight + 'px';
+        });
+    }
+
+    function toggleComment(headerElement) {
+        const item = headerElement.parentElement;
+        const body = item.querySelector('.comment-body');
+        const toggleText = headerElement.querySelector('.comment-toggle span');
+        const idx = parseInt(item.dataset.index, 10);
+        const t = I18N[currentLang];
+
+        if (item.classList.contains('active')) {
+            item.classList.remove('active');
+            body.style.maxHeight = null;
+            toggleText.textContent = t['work.expand'];
+            expandedWork.delete(idx);
+        } else {
+            item.classList.add('active');
+            body.style.maxHeight = body.scrollHeight + 'px';
+            toggleText.textContent = t['work.collapse'];
+            expandedWork.add(idx);
+        }
+    }
+
+    /* ============================================================
+       七、竞赛卡片与弹窗
+    ============================================================ */
+    function renderComps() {
+        const t = I18N[currentLang];
+        const grid = document.getElementById('compGrid');
+        grid.innerHTML = DATA[currentLang].comps.map((c, i) => {
+            const isOther = c.type === 'other';
+            const action = isOther ? 'openOtherModal()' : `openCompModal(${i})`;
+            const linkText = isOther ? t['comp.viewTimeline'] : t['comp.viewDetails'];
+            return `
+            <div class="comp-card" onclick="${action}">
+                <span class="comp-tag${c.award ? ' award' : ''}">${c.tag}</span>
+                <h3>${c.title}</h3>
+                <p>${c.desc}</p>
+                <div class="comp-footer">
+                    <span class="comp-date">${c.date}</span>
+                    <span class="comp-link">${linkText}</span>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    function fillCompModal(index) {
+        const c = DATA[currentLang].comps[index];
+        if (!c) return;
+        document.getElementById('modalCompTitle').innerHTML = c.title;
+        document.getElementById('modalCompSubtitle').innerHTML = `${c.tag} | ${c.date}`;
+        document.getElementById('modalCompBody').innerHTML = c.body;
+    }
+
+    function openCompModal(index) {
+        currentCompIndex = index;
+        fillCompModal(index);
+        document.getElementById('compModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    /* ============================================================
+       八、其他获奖
+    ============================================================ */
+    function renderAwards() {
+        const tl = document.getElementById('otherTimeline');
+        tl.innerHTML = DATA[currentLang].awards.map(a => `
+            <div class="other-item">
+                <div class="other-date">${a.date}</div>
+                <div class="other-title">${a.title}</div>
+            </div>
+        `).join('');
+    }
+
+    function openOtherModal() {
+        document.getElementById('otherModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    /* ============================================================
+       九、通用弹窗
+    ============================================================ */
+    function openContactModal() {
+        document.getElementById('contactModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function openResumeModal() {
+        document.getElementById('resumeModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function openResume(lang) {
+        // 中文简历 / 英文简历对应的文件名
+        const file = (lang === 'en') ? 'resume-en.pdf' : 'resume-zh.pdf';
+        window.open(file, '_blank');
+    }
+
+    function closeModal(event) {
+        const isOverlayClick = event.target.classList.contains('modal-overlay');
+        const isCloseBtn = event.target.classList.contains('close-btn');
+        const isX = event.target.innerText === '×';
+        const isCloseText = event.target.classList.contains('btn-primary');
+
+        if (isOverlayClick || isCloseBtn || isX || isCloseText) {
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.classList.remove('active');
+            });
+            document.body.style.overflow = 'auto';
+            currentCompIndex = null;
+        }
+    }
+
+    /* ============================================================
+       十、AI 岗位匹配
+    ============================================================ */
+    function quickMatch(job) {
+        document.getElementById('jobInput').value = job;
+        startAIMatching();
+    }
+
+    function handleKeyPress(e) {
+        if (e.key === 'Enter') startAIMatching();
+    }
+
+    function findAiKey(input) {
+        const aiMap = DATA[currentLang].ai;
+        const otherLang = (currentLang === 'zh') ? 'en' : 'zh';
+        const otherMap = DATA[otherLang].ai;
+
+        // 先匹配当前语言
+        for (let key in aiMap) {
+            if (key !== 'default' && input.includes(key)) return { lang: currentLang, key: key };
+        }
+        // 再匹配另一种语言（方便用户中英混杂输入）
+        for (let key in otherMap) {
+            if (key !== 'default' && input.includes(key)) return { lang: otherLang, key: key };
+        }
+        return { lang: currentLang, key: 'default' };
+    }
+
+    function renderAiResult(resolvedKey) {
+        // resolvedKey 形如 { lang, key }
+        const data = DATA[resolvedKey.lang].ai[resolvedKey.key];
+        if (!data) return;
+        document.getElementById('matchScore').textContent = data.score;
+        document.getElementById('matchTitle').textContent = data.title;
+        document.getElementById('matchSkills').innerHTML =
+            data.skills.map(s => `<span class="match-skill-badge">${s}</span>`).join('');
+        document.getElementById('matchExp').innerHTML = data.exp;
+    }
+
+    function startAIMatching() {
+        const input = document.getElementById('jobInput').value.trim();
+        if (!input) {
+            alert(I18N[currentLang]['ai.empty']);
+            return;
         }
 
-        async function sendAiMessage() {
-            const input = document.getElementById('ai-chat-input');
-            const msg = input.value.trim();
-            if(!msg) return;
-            
-            const chatBox = document.getElementById('ai-chat-messages');
-            
-            // 显示用户问题
-            chatBox.innerHTML += `<div style="background: #8b5cf6; color: white; padding: 10px 15px; border-radius: 12px; border-bottom-right-radius: 0; align-self: flex-end; max-width: 85%; line-height: 1.5;">${msg}</div>`;
-            input.value = '';
-            chatBox.scrollTop = chatBox.scrollHeight;
+        const loading = document.getElementById('aiLoading');
+        const result = document.getElementById('aiResult');
 
-            // 显示加载中
-            const loadingId = 'loading-' + Date.now();
-            chatBox.innerHTML += `<div id="${loadingId}" style="background: white; padding: 10px 15px; border-radius: 12px; border-bottom-left-radius: 0; max-width: 85%; color: #6b7280; line-height: 1.5;">正在思考中...</div>`;
-            chatBox.scrollTop = chatBox.scrollHeight;
+        result.classList.remove('active');
+        loading.classList.add('active');
 
-            try {
-                // 将详细的 PDF 内容作为背景知识塞入 System Prompt
-                const systemPrompt = `
-                    你是栗丽婧的专属AI助理，旨在向HR或面试官展示她的专业能力。请基于以下栗丽婧的详细履历回答问题，语气要专业、自信、友好。
-                    
-                    【基本背景】
-                    栗丽婧，中共党员。香港理工大学数字经济硕士在读（QS 50），合肥工业大学经济学本科（GPA 87.65/100）。
-                    
-                    【详细实习经历】
-                    1. 华发集团（项目运营专员）：独立负责业主满意度调研。她熟练运用Excel高级功能（VLOOKUP、IF等）对海量问卷数据进行多表关联与逻辑校验。她还独立搭建了动态实时数据更新面板（Dashboard），为运营团队制定物业费催缴策略提供了强有力的数据支撑。
-                    2. 禾和时尚（商业分析助理）：直接对接业务数据库，独立运用SQL提取销售流水。她不仅完成了异常值清洗，还搭建了区域、品牌、品类三级维度的业务看板，并主动收集同商圈竞品数据，撰写了深度的竞品分析报告。
-                    3. 中铁十五局（数据实习生）：建立并维护了覆盖50+类建筑材料的数字化台账。她运用Excel数据透视表对材料采购、库存、消耗进行时间序列趋势分析，成功排查出库存周转偏慢的异常并输出简报。
-                    4. 代县农信社（风险管理）：对逾期客户数据进行深度清洗与分类，提取关键风险特征，协助部门搭建了不良资产价值评估模型，为季度风险排查提供量化依据。
-                    5. 锦泽工程（管理顾问）：深入进行市场与产业研究，梳理业务流程，参与制定企业组织策略与行动计划。
-                    
-                    【真实获奖记录（极其重要：严禁编造任何未提及的奖项）】
-                    她获得的荣誉仅限以下列表：
-                    - 合肥工业大学校级三等奖学金
-                    - 合肥工业大学学习进步奖
-                    - iCAN 创新创业大赛省级一等奖
-                    - 服务外包创新创业大赛省级三等奖
-                    - 互联网+创新创业大赛省级三等奖及校级金奖/银奖
-                    - 三下乡社会实践省级立项及多项优秀调研报告奖
-                    - “挑战杯”课外学术科技作品竞赛校级二等奖
-                    （绝对不包含任何其他奖学金或未提及的奖项！）
-                    
-                    【竞赛与创业】
-                    - “Sober”疲劳驾驶检测系统：作为商业与财务负责人，主导PEST宏观分析，绘制商业画布，并编制了未来五年的财务预测报表。
-                    - “探析宣州产业集群”三下乡：担任副队长，主导政企对接与实地调研，后期运用SPSS进行定性与定量分析。
-                    - “pass the romantic”鲜花创业：创始人，全渠道运营，实现了86%的高回购率。
-                    
-                    【回答要求】
-                    1. 当HR问到具体项目时，请详细描述她承担的“动作”和“业务逻辑”，不要只罗列数字，要展现出她“懂业务的数据分析能力”。
-                    2. 语言要自然流畅，像一位专业的职场顾问在介绍候选人。
-                    3. 严禁编造简历中未提及的任何奖学金、荣誉称号或奖励。
-                    4. 控制在150字以内。
-                `;
+        // 模拟 AI 思考
+        setTimeout(() => {
+            loading.classList.remove('active');
 
-                const res = await fetch(`${API_BASE_URL}/api/chat`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        messages: [
-                            { role: 'system', content: systemPrompt },
-                            { role: 'user', content: msg }
-                        ],
-                        temperature: 0.6
-                    })
-                });
+            const resolved = findAiKey(input);
+            lastAiKey = resolved;
+            renderAiResult(resolved);
 
-                if (!res.ok) throw new Error('网络请求失败');
-                const data = await res.json();
-                const reply = data.choices[0].message.content;
-                
-                document.getElementById(loadingId).outerHTML = `<div style="background: white; padding: 10px 15px; border-radius: 12px; border-bottom-left-radius: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); max-width: 85%; line-height: 1.6;">${reply}</div>`;
-            } catch (error) {
-                document.getElementById(loadingId).outerHTML = `<div style="background: white; padding: 10px 15px; border-radius: 12px; border-bottom-left-radius: 0; max-width: 85%; color: red; line-height: 1.6;">连接 AI 服务器失败，请检查网络配置。</div>`;
-            }
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
+            result.classList.add('active');
+        }, 1500);
+    }
+
+    /* ============================================================
+       十一、启动
+    ============================================================ */
+    (function init() {
+        const saved = localStorage.getItem('site-lang');
+        // 首次访问时依据浏览器语言自动判断
+        const browserLang = (navigator.language || 'zh').toLowerCase().startsWith('zh') ? 'zh' : 'en';
+        applyLang(saved || browserLang);
+    })();
     </script>
 </body>
 </html>
